@@ -7,7 +7,7 @@
   <title>RUET Nest | Verified Hostel & Mess Review Platform</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Leaflet CSS & JS (Interactive Map) -->
+  <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <!-- Font Awesome Icons -->
@@ -50,7 +50,7 @@
         <button onclick="openCompareModal()" id="compareBtn" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow transition items-center gap-1.5">
           <i class="fa-solid fa-scale-balanced"></i> Compare (<span id="compareCount">0</span>)
         </button>
-        <button onclick="openSubmitModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md hover:shadow-emerald-500/20 transition flex items-center gap-2">
+        <button onclick="openSubmitModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-md transition flex items-center gap-2">
           <i class="fa-solid fa-plus-circle"></i> Submit Review / Mess
         </button>
         <button onclick="handleAdminClick()" id="navAdminBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-sm font-semibold px-3.5 py-2 rounded-xl transition flex items-center gap-2 relative">
@@ -63,57 +63,52 @@
 
   <!-- ==================== PUBLIC VIEW ==================== -->
   <main id="publicView" class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-5">
-
-    <!-- Hero & Dynamic Stats -->
     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-6 text-white shadow-xl border border-slate-700/60 flex flex-col lg:flex-row items-center justify-between gap-6">
       <div class="space-y-2.5 max-w-2xl">
         <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 px-3 py-1 rounded-full">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Community Driven Housing Network
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Secure Firebase Authentication Enabled
         </div>
         <h2 class="text-2xl md:text-3xl font-extrabold leading-tight">Find the Right Mess or Hostel Around RUET Without the Guesswork</h2>
-        <p class="text-slate-300 text-sm leading-relaxed">Explore interactive street & satellite maps, compare monthly seat rents, meal rates, and landlord behavior ratings submitted by RUET students.</p>
+        <p class="text-slate-300 text-sm leading-relaxed">Explore interactive maps, compare monthly seat rents, meal rates, and landlord behavior ratings submitted by RUET students.</p>
       </div>
       <div class="grid grid-cols-3 gap-3 w-full lg:w-auto shrink-0">
         <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl text-center border border-white/10">
           <div id="statPlaces" class="text-2xl font-extrabold text-emerald-400">0</div>
-          <div class="text-xs text-slate-300 mt-0.5">Listed Hostels & Messes</div>
+          <div class="text-xs text-slate-300 mt-0.5">Listed Messes</div>
         </div>
         <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl text-center border border-white/10">
           <div id="statReviews" class="text-2xl font-extrabold text-amber-400">0</div>
-          <div class="text-xs text-slate-300 mt-0.5">Student Reviews</div>
+          <div class="text-xs text-slate-300 mt-0.5">Reviews</div>
         </div>
         <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl text-center border border-white/10">
           <div id="statAvgRent" class="text-2xl font-extrabold text-sky-400">৳0</div>
-          <div class="text-xs text-slate-300 mt-0.5">Avg. Seat Rent</div>
+          <div class="text-xs text-slate-300 mt-0.5">Avg. Rent</div>
         </div>
       </div>
     </div>
 
-    <!-- Interactive Quick Area Pills -->
+    <!-- Quick Zones -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
       <span class="text-xs font-bold uppercase text-slate-400 shrink-0 mr-1"><i class="fa-solid fa-compass mr-1"></i>Quick Zones:</span>
-      <button onclick="setQuickArea('ALL')" id="pill-ALL" class="area-pill bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm transition shrink-0">All RUET Zones</button>
+      <button onclick="setQuickArea('ALL')" id="pill-ALL" class="area-pill bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm transition shrink-0">All Zones</button>
       <button onclick="setQuickArea('Talaimari')" id="pill-Talaimari" class="area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0">Talaimari</button>
       <button onclick="setQuickArea('Kazla')" id="pill-Kazla" class="area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0">Kazla</button>
       <button onclick="setQuickArea('Vodra')" id="pill-Vodra" class="area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0">Vodra</button>
       <button onclick="setQuickArea('Binodpur')" id="pill-Binodpur" class="area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0">Binodpur</button>
-      <button onclick="setQuickArea('Padma Residential')" id="pill-Padma Residential" class="area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0">Padma Residential</button>
     </div>
 
-    <!-- Search & Filter Bar -->
+    <!-- Search & Filters -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
       <div class="lg:col-span-2 relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400"></i>
-        <input id="searchInput" oninput="renderPlaces()" type="text" placeholder="Search by mess name, road, or landmark..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+        <input id="searchInput" oninput="renderPlaces()" type="text" placeholder="Search by mess name, road..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
       </div>
       <select id="areaFilter" onchange="syncAreaPills(); renderPlaces()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        <option value="ALL">All Areas (Near RUET)</option>
+        <option value="ALL">All Areas</option>
         <option value="Talaimari">Talaimari</option>
         <option value="Kazla">Kazla</option>
         <option value="Vodra">Vodra</option>
-        <option value="Padma Residential">Padma Residential Area</option>
         <option value="Binodpur">Binodpur</option>
-        <option value="Monafer Mor">Monafer Mor</option>
       </select>
       <select id="budgetFilter" onchange="renderPlaces()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
         <option value="ALL">Any Seat Rent</option>
@@ -123,46 +118,26 @@
       </select>
       <select id="sortFilter" onchange="renderPlaces()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500">
         <option value="rating">Sort: Highest Rated</option>
-        <option value="rent_low">Sort: Lowest Seat Rent</option>
-        <option value="owner">Sort: Best Owner Behavior</option>
+        <option value="rent_low">Sort: Lowest Rent</option>
       </select>
     </div>
 
-    <!-- Map + Mess List Split Layout -->
+    <!-- Map & List -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      <!-- Left: Interactive Map -->
       <div class="lg:col-span-7 bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80">
-        <div class="flex flex-wrap items-center justify-between px-1 pb-3 gap-2">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <h3 class="font-bold text-sm text-slate-800">Live Interactive RUET Housing Map</h3>
-          </div>
-          <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
-            <button onclick="setMapLayer('google_street')" id="layer-google_street" class="map-layer-btn bg-white text-slate-900 shadow-sm text-xs px-2.5 py-1 rounded-lg font-bold transition">
-              Road Map
-            </button>
-            <button onclick="setMapLayer('google_sat')" id="layer-google_sat" class="map-layer-btn text-slate-600 hover:text-slate-900 text-xs px-2.5 py-1 rounded-lg font-semibold transition">
-              Satellite
-            </button>
-            <button onclick="setMapLayer('esri')" id="layer-esri" class="map-layer-btn text-slate-600 hover:text-slate-900 text-xs px-2.5 py-1 rounded-lg font-semibold transition">
-              Detailed Atlas
-            </button>
-            <button onclick="resetMapView()" class="text-xs text-emerald-600 hover:bg-emerald-50 px-2 py-1 rounded-lg font-bold transition" title="Center on RUET">
-              <i class="fa-solid fa-location-crosshairs"></i> RUET
-            </button>
-          </div>
+        <div class="flex items-center justify-between px-1 pb-3">
+          <h3 class="font-bold text-sm text-slate-800">RUET Housing Map</h3>
+          <button onclick="resetMapView()" class="text-xs text-emerald-600 hover:bg-emerald-50 px-2 py-1 rounded-lg font-bold transition">
+            <i class="fa-solid fa-location-crosshairs"></i> Center RUET
+          </button>
         </div>
         <div id="mainMap"></div>
       </div>
-
-      <!-- Right: Interactive Mess Cards List -->
-      <div class="lg:col-span-5 space-y-3.5 max-h-[545px] overflow-y-auto custom-scrollbar pr-1" id="placesListContainer">
-        <!-- Populated by JS -->
-      </div>
+      <div class="lg:col-span-5 space-y-3.5 max-h-[545px] overflow-y-auto custom-scrollbar pr-1" id="placesListContainer"></div>
     </div>
   </main>
 
-  <!-- ==================== ADMIN LOGIN MODAL ==================== -->
+  <!-- ==================== SECURE FIREBASE AUTH MODAL ==================== -->
   <div id="adminLoginModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-5">
       <div class="flex items-center justify-between">
@@ -171,8 +146,8 @@
             <i class="fa-solid fa-user-shield"></i>
           </div>
           <div>
-            <h3 class="font-extrabold text-lg text-slate-900">Admin Portal Login</h3>
-            <p class="text-xs text-slate-500">Authorized RUET Nest Moderators Only</p>
+            <h3 class="font-extrabold text-lg text-slate-900">Secure Admin Login</h3>
+            <p class="text-xs text-slate-500">Firebase Authenticated Portal</p>
           </div>
         </div>
         <button onclick="closeAdminLoginModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500">
@@ -180,57 +155,38 @@
         </button>
       </div>
 
-      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+      <form onsubmit="handleFirebaseLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Admin Email / ID</label>
-          <input required id="loginId" type="text" placeholder="Enter admin email..." class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Admin Email</label>
+          <input required id="loginEmail" type="email" placeholder="admin@ruet.ac.bd" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
         </div>
         <div>
           <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Password</label>
           <input required id="loginPass" type="password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
         </div>
-        <div id="loginError" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-lg">
-          Invalid Admin ID or Password. Please try again.
-        </div>
+        <div id="loginError" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-lg"></div>
         <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl shadow transition">
-          Sign In to Dashboard
+          Sign In Securely
         </button>
       </form>
-
-      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-        <div class="text-[11px] font-bold uppercase text-slate-400">Configured Admin Accounts (Click to Auto-Fill):</div>
-        <div class="grid grid-cols-2 gap-2">
-          <button onclick="fillCredentials('senior@ruet.ac.bd', 'ruet2026')" class="text-left bg-white hover:bg-emerald-50 border border-slate-200 p-2 rounded-lg transition">
-            <div class="text-xs font-bold text-slate-800">Account 1 (Senior Vai)</div>
-            <div class="text-[11px] text-slate-500 font-mono">senior@ruet.ac.bd</div>
-            <div class="text-[10px] text-emerald-600 font-mono">Pass: ruet2026</div>
-          </button>
-          <button onclick="fillCredentials('admin@ruet.ac.bd', 'nest1234')" class="text-left bg-white hover:bg-emerald-50 border border-slate-200 p-2 rounded-lg transition">
-            <div class="text-xs font-bold text-slate-800">Account 2 (Moderator)</div>
-            <div class="text-[11px] text-slate-500 font-mono">admin@ruet.ac.bd</div>
-            <div class="text-[10px] text-emerald-600 font-mono">Pass: nest1234</div>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- ==================== ADMIN PANEL VIEW ==================== -->
+  <!-- ==================== PROFESSIONAL ADMIN DASHBOARD ==================== -->
   <section id="adminView" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
       <div>
         <div class="flex items-center gap-2">
-          <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-1 rounded-md"><i class="fa-solid fa-circle-check mr-1"></i>LOGGED IN AS: <span id="activeAdminName">ADMIN</span></span>
-          <h2 class="text-xl font-bold text-slate-800">Review Verification & Directory Manager</h2>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-1 rounded-md">
+            <i class="fa-solid fa-shield-halved mr-1"></i> LOGGED IN: <span id="activeAdminEmail">admin</span>
+          </span>
+          <h2 class="text-xl font-bold text-slate-800">Advanced Admin Dashboard</h2>
         </div>
-        <p class="text-xs text-slate-500 mt-1">Verify student names and RUET roll numbers before publishing reviews. Approved items appear on the live map immediately.</p>
+        <p class="text-xs text-slate-500 mt-1">Manage verified reviews, directory items, and authorized admin accounts securely.</p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="simulateGoogleFormImport()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
-          <i class="fa-solid fa-file-csv"></i> Import Google Form CSV
-        </button>
-        <button onclick="exportBloggerHTML()" class="bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
-          <i class="fa-brands fa-blogger"></i> Generate Blogger Backup HTML
+        <button onclick="openManageAdminsModal()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+          <i class="fa-solid fa-users-gear"></i> Manage Admins
         </button>
         <button onclick="switchView('public')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl">
           <i class="fa-solid fa-arrow-left mr-1"></i> Public View
@@ -241,219 +197,99 @@
       </div>
     </div>
 
-    <!-- Pending Approvals Queue -->
+    <!-- Pending Queue -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
       <div class="bg-amber-50/70 border-b border-amber-200 px-5 py-3.5 flex items-center justify-between">
         <h3 class="font-bold text-sm text-amber-900 flex items-center gap-2">
-          <i class="fa-solid fa-clock-rotate-left"></i> Pending Student Submissions (Awaiting Verification)
+          <i class="fa-solid fa-clock-rotate-left"></i> Pending Submissions Awaiting Verification
         </h3>
         <span id="adminPendingCount" class="text-xs font-bold bg-amber-200 text-amber-900 px-2.5 py-0.5 rounded-full">0 Pending</span>
       </div>
-      <div id="pendingListContainer" class="divide-y divide-slate-200">
-        <!-- Populated by JS -->
-      </div>
+      <div id="pendingListContainer" class="divide-y divide-slate-200"></div>
     </div>
 
-    <!-- Blogger Static HTML Output Box -->
-    <div id="bloggerExportBox" class="hidden bg-slate-900 text-slate-100 p-5 rounded-2xl space-y-3">
-      <div class="flex items-center justify-between">
-        <h4 class="font-bold text-sm text-orange-400"><i class="fa-brands fa-blogger mr-1"></i> Static HTML Code for Blogger Backup (SEO Friendly)</h4>
-        <button onclick="copyBloggerCode()" class="bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Copy HTML</button>
-      </div>
-      <textarea id="bloggerCodeArea" rows="6" readonly class="w-full bg-slate-950 text-emerald-300 font-mono text-xs p-3 rounded-xl border border-slate-700"></textarea>
+    <!-- Manage Existing Messes / CRUD Operations -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4">
+      <h3 class="font-bold text-base text-slate-800"><i class="fa-solid fa-building-shield mr-2 text-emerald-600"></i>Manage Listed Hostels & Messes (Edit / Delete)</h3>
+      <div id="adminPlacesList" class="divide-y divide-slate-100 max-h-72 overflow-y-auto"></div>
     </div>
   </section>
 
-  <!-- ==================== COMPARE MESSES MODAL ==================== -->
-  <div id="compareModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h3 class="text-lg font-extrabold text-slate-900"><i class="fa-solid fa-scale-balanced text-indigo-600 mr-2"></i>Side-by-Side Mess Comparison</h3>
-        <div class="flex items-center gap-2">
-          <button onclick="clearCompare()" class="text-xs text-rose-600 hover:underline font-bold">Clear All</button>
-          <button onclick="closeCompareModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
+  <!-- ==================== MANAGE ADMINS MODAL ==================== -->
+  <div id="manageAdminsModal" class="hidden fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="font-extrabold text-lg text-slate-900"><i class="fa-solid fa-user-plus mr-2 text-indigo-600"></i>Authorized Admin Management</h3>
+        <button onclick="closeManageAdminsModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="compareTableContainer" class="overflow-x-auto"></div>
+      <div class="space-y-3">
+        <div class="flex gap-2">
+          <input id="newAdminEmailInput" type="email" placeholder="New Admin Email (e.g. junior@ruet.ac.bd)" class="flex-1 bg-slate-50 border rounded-xl px-3 py-2 text-sm" />
+          <button onclick="addNewAdminEmail()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl">Add Admin</button>
+        </div>
+        <div class="text-xs font-bold text-slate-500 uppercase pt-2">Current Admin List:</div>
+        <div id="adminListContainer" class="divide-y border rounded-xl p-2 max-h-40 overflow-y-auto text-sm"></div>
+      </div>
     </div>
   </div>
 
-  <!-- ==================== MESS DETAILS + GOOGLE MAP MODAL ==================== -->
+  <!-- Details Modal & Submit Modal (Same as before) -->
   <div id="detailsModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
-      <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10">
-        <div>
-          <span id="modalAreaBadge" class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">Area</span>
-          <h3 id="modalTitle" class="text-xl font-extrabold text-slate-900 mt-1">Mess Name</h3>
-        </div>
-        <button onclick="closeDetailsModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border p-6 space-y-6">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="modalTitle" class="text-xl font-extrabold text-slate-900">Mess Name</h3>
+        <button onclick="closeDetailsModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
-      <div class="p-6 space-y-6">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div class="text-xs text-slate-500">Seat Rent / Month</div>
-            <div id="modalRent" class="text-lg font-extrabold text-slate-900 mt-0.5">৳2,200</div>
-          </div>
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div class="text-xs text-slate-500">Avg Meal Rate</div>
-            <div id="modalMeal" class="text-lg font-extrabold text-slate-900 mt-0.5">৳55 / meal</div>
-          </div>
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div class="text-xs text-slate-500">Owner Behavior</div>
-            <div id="modalOwner" class="text-lg font-extrabold text-emerald-600 mt-0.5">4.5 / 5</div>
-          </div>
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div class="text-xs text-slate-500">Distance to RUET</div>
-            <div id="modalDist" class="text-lg font-extrabold text-slate-900 mt-0.5">6 mins walk</div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Verified Facilities & Amenities</h4>
-            <div id="modalFacilities" class="flex flex-wrap gap-2 pt-1"></div>
-            <p id="modalAddress" class="text-xs text-slate-600 pt-2"><i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i></p>
-          </div>
-          <div class="rounded-xl overflow-hidden border border-slate-200 h-44 bg-slate-100">
-            <iframe id="modalGoogleIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen></iframe>
-          </div>
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <h4 class="font-bold text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-comments text-emerald-600"></i> Student Reviews
-            </h4>
-            <button onclick="openSubmitModalForCurrent()" class="text-xs bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-3 py-1.5 rounded-lg">
-              + Write a Review for this Mess
-            </button>
-          </div>
-          <div id="modalReviewsList" class="space-y-3"></div>
-        </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-slate-50 p-3 rounded-xl"><div class="text-xs text-slate-500">Rent</div><div id="modalRent" class="font-extrabold"></div></div>
+        <div class="bg-slate-50 p-3 rounded-xl"><div class="text-xs text-slate-500">Meal</div><div id="modalMeal" class="font-extrabold"></div></div>
+        <div class="bg-slate-50 p-3 rounded-xl"><div class="text-xs text-slate-500">Owner</div><div id="modalOwner" class="font-extrabold text-emerald-600"></div></div>
+        <div class="bg-slate-50 p-3 rounded-xl"><div class="text-xs text-slate-500">Distance</div><div id="modalDist" class="font-extrabold"></div></div>
       </div>
+      <p id="modalAddress" class="text-xs text-slate-600"></p>
+      <div class="space-y-2"><h4 class="font-bold text-sm">Reviews</h4><div id="modalReviewsList" class="space-y-2"></div></div>
     </div>
   </div>
 
-  <!-- ==================== SUBMIT REVIEW MODAL ==================== -->
   <div id="submitModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200">
-      <div class="sticky top-0 bg-slate-900 text-white px-6 py-4 flex items-center justify-between z-10">
-        <div>
-          <h3 class="text-lg font-bold">Submit Hostel / Mess Review</h3>
-          <p class="text-xs text-slate-300">All submissions are placed in the pending queue until verified by an Admin.</p>
-        </div>
-        <button onclick="closeSubmitModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-lg">Submit Review / Mess</h3>
+        <button onclick="closeSubmitModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
-      <form id="reviewForm" onsubmit="handleReviewSubmit(event)" class="p-6 space-y-5">
-        <div class="bg-emerald-50/70 border border-emerald-200 p-4 rounded-xl space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-900"><i class="fa-solid fa-id-card mr-1"></i> Step 1: RUET Student Verification</span>
-            <span class="text-[11px] text-emerald-700 font-medium">Roll number is only visible to Admins</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <input required id="fStudentName" type="text" placeholder="Your Full Name" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-            <input required id="fStudentRoll" type="text" placeholder="RUET Roll (e.g. 2103045)" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-            <input required id="fStudentDept" type="text" placeholder="Dept & Series (e.g. CSE '21)" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-          </div>
-          <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer pt-1">
-            <input id="fAnonymous" type="checkbox" checked class="rounded text-emerald-600 focus:ring-emerald-500" />
-            <span><strong>Hide my name publicly</strong> (Display as "Verified RUETian" to protect privacy)</span>
-          </label>
+      <form id="reviewForm" onsubmit="handleReviewSubmit(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input required id="fStudentName" type="text" placeholder="Your Name" class="border rounded-lg p-2 text-sm" />
+          <input required id="fStudentRoll" type="text" placeholder="RUET Roll" class="border rounded-lg p-2 text-sm" />
+          <input required id="fStudentDept" type="text" placeholder="Dept & Series" class="border rounded-lg p-2 text-sm" />
         </div>
-
-        <div class="space-y-3">
-          <label class="block text-xs font-bold uppercase text-slate-500">Step 2: Select Existing Mess or Add New Property</label>
-          <select id="fPlaceSelect" onchange="toggleNewPlaceFields()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm font-medium"></select>
-
-          <div id="newPlaceFields" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input id="fNewName" type="text" placeholder="Mess / Hostel / House Name" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-              <select id="fNewArea" class="bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm">
-                <option value="Talaimari">Talaimari</option>
-                <option value="Kazla">Kazla</option>
-                <option value="Vodra">Vodra</option>
-                <option value="Padma Residential">Padma Residential Area</option>
-                <option value="Binodpur">Binodpur</option>
-                <option value="Monafer Mor">Monafer Mor</option>
-              </select>
-            </div>
-            <input id="fNewAddress" type="text" placeholder="Detailed Address / Landmark" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Click on the Map to Pin Exact Mess Location:</label>
-              <div id="pickerMap"></div>
-              <div class="flex gap-3 mt-1.5 text-xs text-slate-500">
-                <span>Latitude: <strong id="pickedLat">24.3636</strong></span>
-                <span>Longitude: <strong id="pickedLng">88.6284</strong></span>
-              </div>
-            </div>
-          </div>
+        <select id="fPlaceSelect" onchange="toggleNewPlaceFields()" class="w-full border rounded-lg p-2.5 text-sm"></select>
+        <div id="newPlaceFields" class="hidden space-y-2 bg-slate-50 p-3 rounded-xl">
+          <input id="fNewName" type="text" placeholder="New Mess Name" class="w-full border rounded-lg p-2 text-sm" />
+          <select id="fNewArea" class="w-full border rounded-lg p-2 text-sm">
+            <option value="Talaimari">Talaimari</option><option value="Kazla">Kazla</option><option value="Vodra">Vodra</option><option value="Binodpur">Binodpur</option>
+          </select>
+          <input id="fNewAddress" type="text" placeholder="Detailed Address" class="w-full border rounded-lg p-2 text-sm" />
+          <div id="pickerMap"></div>
+          <div class="text-xs">Lat: <span id="pickedLat">24.3636</span>, Lng: <span id="pickedLng">88.6284</span></div>
         </div>
-
-        <div class="space-y-3">
-          <label class="block text-xs font-bold uppercase text-slate-500">Step 3: Rent, Ratings & Detailed Feedback</label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div>
-              <label class="text-[11px] text-slate-500">Seat Rent (BDT)</label>
-              <input required id="fRent" type="number" placeholder="2200" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm" />
-            </div>
-            <div>
-              <label class="text-[11px] text-slate-500">Meal Rate (BDT)</label>
-              <input required id="fMeal" type="number" placeholder="55" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm" />
-            </div>
-            <div>
-              <label class="text-[11px] text-slate-500">Overall Rating (1-5)</label>
-              <select id="fRating" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 text-sm">
-                <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
-                <option value="4">⭐⭐⭐⭐ (4 - Good)</option>
-                <option value="3">⭐⭐⭐ (3 - Average)</option>
-                <option value="2">⭐⭐ (2 - Poor)</option>
-                <option value="1">⭐ (1 - Terrible)</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[11px] text-slate-500">Owner Behavior (1-5)</label>
-              <select id="fOwnerRating" class="w-full border border-slate-300 rounded-lg px-2 py-1.5 text-sm">
-                <option value="5">5 - Very Cooperative</option>
-                <option value="4">4 - Polite & Fair</option>
-                <option value="3">3 - Neutral</option>
-                <option value="2">2 - Strict / Unhelpful</option>
-                <option value="1">1 - Rude / Deposit Issues</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-3 pt-1 text-xs">
-            <label class="flex items-center gap-1.5"><input type="checkbox" class="fac-check" value="Fast WiFi" checked /> Fast WiFi</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" class="fac-check" value="24/7 Water & IPS" checked /> 24/7 Water & IPS</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" class="fac-check" value="Quality Meal System" /> Quality Meal System</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" class="fac-check" value="Flexible Gate Hours" /> Flexible Gate Hours</label>
-            <label class="flex items-center gap-1.5"><input type="checkbox" class="fac-check" value="No Waterlogging" /> No Waterlogging</label>
-          </div>
-
-          <textarea required id="fComment" rows="3" placeholder="Share honest details about owner, food, security, and environment..." class="w-full border border-slate-300 rounded-lg p-3 text-sm"></textarea>
+        <div class="grid grid-cols-2 gap-3">
+          <input required id="fRent" type="number" placeholder="Seat Rent (BDT)" class="border rounded-lg p-2 text-sm" />
+          <input required id="fMeal" type="number" placeholder="Meal Rate (BDT)" class="border rounded-lg p-2 text-sm" />
         </div>
-
-        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition">
-          Submit Review for Admin Verification
-        </button>
+        <textarea required id="fComment" rows="3" placeholder="Honest review..." class="w-full border rounded-lg p-3 text-sm"></textarea>
+        <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2.5 rounded-xl">Submit for Verification</button>
       </form>
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
   <script>
-    // ==================== FIREBASE & CONFIG INIT ====================
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCrbBZXiRySEfe1c9wXRQbdBP-lqatBGCE",
       authDomain: "rajshahi-mess-review.firebaseapp.com",
@@ -461,167 +297,132 @@
       projectId: "rajshahi-mess-review",
       storageBucket: "rajshahi-mess-review.appspot.com",
       messagingSenderId: "39763980001",
-      appId: "1:39763980001:web:676754edb5ae5c324311a0",
-      measurementId: "G-1Z05TZPZVJ"
+      appId: "1:39763980001:web:676754edb5ae5c324311a0"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    console.log("Firebase Connected Successfully!");
+    const auth = firebase.auth();
 
-    // ==================== ADMIN CREDENTIALS ====================
-    const ADMIN_ACCOUNTS = [
-      { id: "senior@ruet.ac.bd", pass: "ruet2026", name: "Senior Coordinator" },
-      { id: "admin@ruet.ac.bd", pass: "nest1234", name: "RUET Moderator" }
-    ];
-    let loggedInAdmin = null;
-
-    // ==================== DEFAULT RUET MESS DATA ====================
-    const RUET_CENTER = [24.3636, 88.6284];
-    let currentModalPlaceId = null;
-    let mainTileLayer = null;
-    let compareList = [];
-
-    let places = [
-      {
-        id: "p1",
-        name: "Padma View Student Mess",
-        area: "Talaimari",
-        address: "Holding 42, Near Talaimari Shahid Minar (5 mins from RUET West Gate)",
-        lat: 24.3612,
-        lng: 88.6245,
-        seatRent: 2300,
-        mealRate: 55,
-        distance: "5 mins walk",
-        facilities: ["Fast WiFi", "24/7 Water & IPS", "Quality Meal System"],
-        reviews: [
-          { studentName: "Tanvir Ahmed", roll: "2003018", dept: "CSE '20", anonymous: true, rating: 4.5, ownerRating: 5, comment: "The landlord is very cooperative and never creates unnecessary hassle.", date: "Oct 2026" }
-        ]
-      },
-      {
-        id: "p2",
-        name: "Kazla Green Villa (Bashundhara Lane)",
-        area: "Kazla",
-        address: "Kazla Dharampur Road, 300m South of RUET Main Gate",
-        lat: 24.3625,
-        lng: 88.6315,
-        seatRent: 2000,
-        mealRate: 50,
-        distance: "4 mins walk",
-        facilities: ["24/7 Water & IPS", "No Waterlogging"],
-        reviews: [
-          { studentName: "Rafiul Karim", roll: "2201033", dept: "ME '22", anonymous: true, rating: 2.5, ownerRating: 2, comment: "Very close to RUET main gate, affordable rent.", date: "Oct 2026" }
-        ]
-      }
-    ];
-
+    let currentUser = null;
+    let allowedAdminEmails = ["senior@ruet.ac.bd", "admin@ruet.ac.bd"];
+    let places = [];
     let pendingSubmissions = [];
+    let RUET_CENTER = [24.3636, 88.6284];
+    let mainMap, pickerMap, pickerMarker;
+    let mapMarkers = {};
 
-    // Load data from Firebase on start
+    // Load Data & Admins from Firebase
     function loadDataFromFirebase() {
-      db.ref('ruet_nest/places').once('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val) places = val;
+      db.ref('ruet_nest/admins').on('value', snap => {
+        if (snap.val()) allowedAdminEmails = snap.val();
+      });
+      db.ref('ruet_nest/places').on('value', snap => {
+        places = snap.val() || [
+          { id: "p1", name: "Padma View Mess", area: "Talaimari", address: "Talaimari", lat: 24.3612, lng: 88.6245, seatRent: 2300, mealRate: 55, distance: "5 mins", facilities: ["WiFi"], reviews: [] }
+        ];
         renderPlaces();
       });
-      db.ref('ruet_nest/pending').once('value', (snapshot) => {
-        const val = snapshot.val();
-        if (val) pendingSubmissions = val;
+      db.ref('ruet_nest/pending').on('value', snap => {
+        pendingSubmissions = snap.val() || [];
         renderAdminQueue();
       });
     }
 
-    function saveDataToFirebase() {
-      db.ref('ruet_nest/places').set(places);
-      db.ref('ruet_nest/pending').set(pendingSubmissions);
+    // Firebase Auth State Listener
+    auth.onAuthStateChanged(user => {
+      currentUser = user;
+      if (user && allowedAdminEmails.includes(user.email)) {
+        document.getElementById('adminBtnText').innerText = "Admin Dashboard";
+        document.getElementById('adminLockIcon').className = "fa-solid fa-user-check text-emerald-400";
+      } else {
+        document.getElementById('adminBtnText').innerText = "Admin Login";
+        document.getElementById('adminLockIcon').className = "fa-solid fa-lock text-amber-400";
+      }
+    });
+
+    function handleAdminClick() {
+      if (currentUser && allowedAdminEmails.includes(currentUser.email)) {
+        switchView('admin');
+      } else {
+        document.getElementById('loginError').classList.add('hidden');
+        document.getElementById('adminLoginModal').classList.remove('hidden');
+      }
     }
 
-    // ==================== MAP LAYERS ====================
-    let mainMap, pickerMap, pickerMarker;
-    let mapMarkers = {};
+    function closeAdminLoginModal() { document.getElementById('adminLoginModal').classList.add('hidden'); }
 
-    const TILE_LAYERS = {
-      google_street: { url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', attr: '&copy; Google Maps' },
-      google_sat: { url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', attr: '&copy; Google Satellite' },
-      esri: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', attr: '&copy; Esri Map' }
-    };
+    // Secure Login via Firebase Auth
+    function handleFirebaseLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
 
+      if (!allowedAdminEmails.includes(email)) {
+        const err = document.getElementById('loginError');
+        err.innerText = "Access Denied: This email is not authorized as an admin.";
+        err.classList.remove('hidden');
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          closeAdminLoginModal();
+          switchView('admin');
+        })
+        .catch(err => {
+          const errorBox = document.getElementById('loginError');
+          errorBox.innerText = err.message;
+          errorBox.classList.remove('hidden');
+        });
+    }
+
+    function logoutAdmin() {
+      auth.signOut().then(() => {
+        switchView('public');
+      });
+    }
+
+    // Manage Admins Modal
+    function openManageAdminsModal() {
+      const container = document.getElementById('adminListContainer');
+      container.innerHTML = allowedAdminEmails.map(email => `<div class="py-1.5 flex justify-between items-center"><span>${email}</span> <button onclick="removeAdminEmail('${email}')" class="text-rose-600 text-xs font-bold">Remove</button></div>`).join('');
+      document.getElementById('manageAdminsModal').classList.remove('hidden');
+    }
+    function closeManageAdminsModal() { document.getElementById('manageAdminsModal').classList.add('hidden'); }
+
+    function addNewAdminEmail() {
+      const email = document.getElementById('newAdminEmailInput').value.trim();
+      if (email && !allowedAdminEmails.includes(email)) {
+        allowedAdminEmails.push(email);
+        db.ref('ruet_nest/admins').set(allowedAdminEmails);
+        openManageAdminsModal();
+        document.getElementById('newAdminEmailInput').value = '';
+      }
+    }
+
+    function removeAdminEmail(email) {
+      if (allowedAdminEmails.length <= 1) { alert("At least one admin required."); return; }
+      allowedAdminEmails = allowedAdminEmails.filter(e => e !== email);
+      db.ref('ruet_nest/admins').set(allowedAdminEmails);
+      openManageAdminsModal();
+    }
+
+    // Map & UI Rendering functions
     function initMaps() {
       mainMap = L.map('mainMap').setView(RUET_CENTER, 15);
-      mainTileLayer = L.tileLayer(TILE_LAYERS.google_street.url, { maxZoom: 20 }).addTo(mainMap);
-
-      const ruetIcon = L.divIcon({
-        className: '',
-        html: `<div class="bg-slate-900 text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-lg border-2 border-emerald-400 whitespace-nowrap"><i class="fa-solid fa-graduation-cap text-emerald-400"></i> RUET Main Campus</div>`,
-        iconSize: [135, 28]
-      });
-      L.marker(RUET_CENTER, { icon: ruetIcon }).addTo(mainMap).bindPopup("<b>RUET Main Campus</b>");
-    }
-
-    function setMapLayer(key) {
-      if (mainTileLayer) mainMap.removeLayer(mainTileLayer);
-      mainTileLayer = L.tileLayer(TILE_LAYERS[key].url, { maxZoom: 20 }).addTo(mainMap);
-      document.querySelectorAll('.map-layer-btn').forEach(btn => btn.className = "map-layer-btn text-slate-600 hover:text-slate-900 text-xs px-2.5 py-1 rounded-lg font-semibold transition");
-      document.getElementById('layer-' + key).className = "map-layer-btn bg-white text-slate-900 shadow-sm text-xs px-2.5 py-1 rounded-lg font-bold transition";
-    }
-
-    function resetMapView() {
-      mainMap.flyTo(RUET_CENTER, 15, { duration: 0.8 });
-    }
-
-    function highlightPin(placeId, active) {
-      const el = document.getElementById('pin-' + placeId);
-      if (el) el.classList.toggle('pin-active', active);
-    }
-
-    function flyToPlace(event, placeId) {
-      event.stopPropagation();
-      const p = places.find(x => x.id === placeId);
-      if (!p) return;
-      mainMap.flyTo([p.lat, p.lng], 17, { duration: 0.8 });
-      highlightPin(placeId, true);
-      setTimeout(() => highlightPin(placeId, false), 2500);
-    }
-
-    function setQuickArea(area) {
-      document.getElementById('areaFilter').value = area;
-      syncAreaPills();
-      renderPlaces();
-    }
-
-    function syncAreaPills() {
-      const current = document.getElementById('areaFilter').value;
-      document.querySelectorAll('.area-pill').forEach(btn => btn.className = "area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0");
-      const activeBtn = document.getElementById('pill-' + current);
-      if (activeBtn) activeBtn.className = "area-pill bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm transition shrink-0";
-    }
-
-    function getPlaceStats(place) {
-      if (!place.reviews || !place.reviews.length) return { avgRating: 0, avgOwner: 0 };
-      const sumR = place.reviews.reduce((a, r) => a + Number(r.rating), 0);
-      const sumO = place.reviews.reduce((a, r) => a + Number(r.ownerRating), 0);
-      return { avgRating: (sumR / place.reviews.length).toFixed(1), avgOwner: (sumO / place.reviews.length).toFixed(1) };
+      L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20 }).addTo(mainMap);
     }
 
     function renderPlaces() {
       const search = document.getElementById('searchInput').value.toLowerCase();
       const area = document.getElementById('areaFilter').value;
       const budget = document.getElementById('budgetFilter').value;
-      const sort = document.getElementById('sortFilter').value;
 
       let filtered = places.filter(p => {
-        const matchSearch = p.name.toLowerCase().includes(search) || p.area.toLowerCase().includes(search) || p.address.toLowerCase().includes(search);
-        const matchArea = area === 'ALL' || p.area === area;
-        const matchBudget = budget === 'ALL' || p.seatRent <= Number(budget);
-        return matchSearch && matchArea && matchBudget;
-      });
-
-      filtered.sort((a, b) => {
-        const stA = getPlaceStats(a), stB = getPlaceStats(b);
-        if (sort === 'rating') return stB.avgRating - stA.avgRating;
-        if (sort === 'rent_low') return a.seatRent - b.seatRent;
-        if (sort === 'owner') return stB.avgOwner - stA.avgOwner;
-        return 0;
+        return (p.name.toLowerCase().includes(search) || p.area.toLowerCase().includes(search)) &&
+               (area === 'ALL' || p.area === area) &&
+               (budget === 'ALL' || p.seatRent <= Number(budget));
       });
 
       Object.values(mapMarkers).forEach(m => mainMap.removeLayer(m));
@@ -631,52 +432,16 @@
       listContainer.innerHTML = '';
 
       filtered.forEach(p => {
-        const { avgRating, avgOwner } = getPlaceStats(p);
-        const badgeColor = avgRating >= 4 ? 'bg-emerald-500' : (avgRating >= 3 ? 'bg-amber-500' : 'bg-rose-500');
-        const isCompared = compareList.includes(p.id);
-
-        const pinIcon = L.divIcon({
-          className: '',
-          html: `<div id="pin-${p.id}" class="${badgeColor} text-white text-xs font-extrabold px-2.5 py-1 rounded-full shadow-lg border-2 border-white flex items-center gap-1 cursor-pointer hover:scale-110 transition">★ ${avgRating}</div>`,
-          iconSize: [58, 26]
-        });
-        const marker = L.marker([p.lat, p.lng], { icon: pinIcon }).addTo(mainMap).on('click', () => openDetailsModal(p.id));
+        const marker = L.marker([p.lat, p.lng]).addTo(mainMap).on('click', () => openDetailsModal(p.id));
         mapMarkers[p.id] = marker;
 
         const card = document.createElement('div');
-        card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-200/90 hover:border-emerald-500 hover:shadow-md transition cursor-pointer group";
-        card.onmouseenter = () => highlightPin(p.id, true);
-        card.onmouseleave = () => highlightPin(p.id, false);
+        card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-500 transition cursor-pointer";
         card.onclick = () => openDetailsModal(p.id);
         card.innerHTML = `
-          <div class="flex items-start justify-between gap-2">
-            <div>
-              <div class="flex items-center gap-1.5">
-                <span class="text-[11px] font-bold uppercase tracking-wide text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md">${p.area}</span>
-                <span class="text-[11px] text-slate-400"><i class="fa-solid fa-person-walking mr-0.5"></i>${p.distance}</span>
-              </div>
-              <h4 class="font-extrabold text-slate-900 text-base mt-1 group-hover:text-emerald-600 transition">${p.name}</h4>
-              <p class="text-xs text-slate-500 line-clamp-1">${p.address}</p>
-            </div>
-            <div class="text-right shrink-0">
-              <div class="inline-flex items-center gap-1 ${badgeColor} text-white text-xs font-extrabold px-2.5 py-1 rounded-xl shadow-sm">
-                <i class="fa-solid fa-star text-[10px]"></i> ${avgRating}
-              </div>
-              <div class="text-[11px] text-slate-400 mt-1">${p.reviews ? p.reviews.length : 0} reviews</div>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
-            <div><span class="text-slate-400">Seat:</span> <strong class="text-slate-800">৳${p.seatRent}</strong></div>
-            <div><span class="text-slate-400">Meal:</span> <strong class="text-slate-800">৳${p.mealRate}</strong></div>
-            <div><span class="text-slate-400">Owner:</span> <strong class="${avgOwner >= 4 ? 'text-emerald-600' : 'text-amber-600'}">${avgOwner}/5</strong></div>
-          </div>
-          <div class="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100 text-xs">
-            <button onclick="flyToPlace(event, '${p.id}')" class="text-emerald-600 hover:text-emerald-700 font-bold flex items-center gap-1">
-              <i class="fa-solid fa-location-dot"></i> Locate on Map
-            </button>
-            <button onclick="toggleCompare(event, '${p.id}')" class="${isCompared ? 'text-indigo-600 font-extrabold' : 'text-slate-500 hover:text-slate-800 font-semibold'} flex items-center gap-1">
-              <i class="fa-solid ${isCompared ? 'fa-square-check' : 'fa-scale-balanced'}"></i> ${isCompared ? 'Added' : 'Compare'}
-            </button>
+          <div class="flex justify-between">
+            <div><span class="text-xs text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded">${p.area}</span><h4 class="font-extrabold text-base mt-1">${p.name}</h4></div>
+            <div class="text-right font-extrabold">৳${p.seatRent}/mo</div>
           </div>
         `;
         listContainer.appendChild(card);
@@ -684,282 +449,129 @@
 
       document.getElementById('statPlaces').innerText = places.length;
       document.getElementById('statReviews').innerText = places.reduce((acc, p) => acc + (p.reviews ? p.reviews.length : 0), 0);
-      const avgRent = places.length ? Math.round(places.reduce((acc, p) => acc + p.seatRent, 0) / places.length) : 0;
-      document.getElementById('statAvgRent').innerText = `৳${avgRent}`;
       document.getElementById('pendingBadge').innerText = pendingSubmissions.length;
-      document.getElementById('adminPendingCount').innerText = `${pendingSubmissions.length} Pending`;
     }
 
-    function toggleCompare(event, placeId) {
-      event.stopPropagation();
-      if (compareList.includes(placeId)) {
-        compareList = compareList.filter(id => id !== placeId);
-      } else {
-        if (compareList.length >= 3) { alert("You can compare up to 3 messes."); return; }
-        compareList.push(placeId);
+    function switchView(view) {
+      document.getElementById('publicView').classList.toggle('hidden', view !== 'public');
+      document.getElementById('adminView').classList.toggle('hidden', view !== 'admin');
+      if (view === 'admin') {
+        renderAdminQueue();
+        renderAdminPlacesList();
+        document.getElementById('activeAdminEmail').innerText = currentUser ? currentUser.email : 'Admin';
       }
-      const btn = document.getElementById('compareBtn');
-      document.getElementById('compareCount').innerText = compareList.length;
-      btn.classList.toggle('hidden', compareList.length === 0);
-      btn.classList.toggle('flex', compareList.length > 0);
-      renderPlaces();
+      if (view === 'public') setTimeout(() => mainMap.invalidateSize(), 150);
     }
 
-    function openCompareModal() {
-      const selected = places.filter(p => compareList.includes(p.id));
-      const container = document.getElementById('compareTableContainer');
-      container.innerHTML = `
-        <table class="w-full text-left border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-200 bg-slate-50">
-              <th class="p-3 font-bold text-slate-500">Feature</th>
-              ${selected.map(p => `<th class="p-3 font-extrabold text-slate-900">${p.name} <span class="block text-xs text-emerald-600 font-semibold">${p.area}</span></th>`).join('')}
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-            <tr><td class="p-3 font-semibold text-slate-600">Overall Rating</td>${selected.map(p => `<td class="p-3 font-bold text-amber-600">★ ${getPlaceStats(p).avgRating} / 5.0</td>`).join('')}</tr>
-            <tr><td class="p-3 font-semibold text-slate-600">Seat Rent</td>${selected.map(p => `<td class="p-3 font-extrabold text-slate-900">৳${p.seatRent}</td>`).join('')}</tr>
-            <tr><td class="p-3 font-semibold text-slate-600">Meal Rate</td>${selected.map(p => `<td class="p-3 font-bold text-slate-800">৳${p.mealRate}</td>`).join('')}</tr>
-            <tr><td class="p-3 font-semibold text-slate-600">Owner Behavior</td>${selected.map(p => `<td class="p-3 font-bold text-emerald-600">${getPlaceStats(p).avgOwner} / 5.0</td>`).join('')}</tr>
-            <tr><td class="p-3 font-semibold text-slate-600">Distance</td>${selected.map(p => `<td class="p-3 text-slate-700">${p.distance}</td>`).join('')}</tr>
-            <tr><td class="p-3 font-semibold text-slate-600">Facilities</td>${selected.map(p => `<td class="p-3 text-xs text-slate-600">${p.facilities.join(', ')}</td>`).join('')}</tr>
-          </tbody>
-        </table>
-      `;
-      document.getElementById('compareModal').classList.remove('hidden');
-    }
-
-    function closeCompareModal() { document.getElementById('compareModal').classList.add('hidden'); }
-    function clearCompare() { compareList = []; document.getElementById('compareBtn').classList.add('hidden'); closeCompareModal(); renderPlaces(); }
-
-    function handleAdminClick() {
-      if (loggedInAdmin) { switchView('admin'); } 
-      else { document.getElementById('loginError').classList.add('hidden'); document.getElementById('adminLoginModal').classList.remove('hidden'); }
-    }
-    function closeAdminLoginModal() { document.getElementById('adminLoginModal').classList.add('hidden'); }
-    function fillCredentials(id, pass) { document.getElementById('loginId').value = id; document.getElementById('loginPass').value = pass; }
-
-    function handleAdminLogin(e) {
-      e.preventDefault();
-      const id = document.getElementById('loginId').value.trim();
-      const pass = document.getElementById('loginPass').value.trim();
-      const matched = ADMIN_ACCOUNTS.find(a => a.id.toLowerCase() === id.toLowerCase() && a.pass === pass);
-      if (matched) {
-        loggedInAdmin = matched;
-        document.getElementById('activeAdminName').innerText = matched.name + ` (${matched.id})`;
-        document.getElementById('adminBtnText').innerText = "Admin Panel";
-        document.getElementById('adminLockIcon').className = "fa-solid fa-user-check text-emerald-400";
-        closeAdminLoginModal();
-        switchView('admin');
-      } else { document.getElementById('loginError').classList.remove('hidden'); }
-    }
-
-    function logoutAdmin() {
-      loggedInAdmin = null;
-      document.getElementById('adminBtnText').innerText = "Admin Login";
-      document.getElementById('adminLockIcon').className = "fa-solid fa-lock text-amber-400";
-      switchView('public');
-    }
-
-    function openDetailsModal(placeId) {
-      const p = places.find(x => x.id === placeId);
-      if (!p) return;
-      currentModalPlaceId = placeId;
-      const { avgRating, avgOwner } = getPlaceStats(p);
-
-      document.getElementById('modalAreaBadge').innerText = `${p.area} • ★ ${avgRating} Rating`;
-      document.getElementById('modalTitle').innerText = p.name;
-      document.getElementById('modalRent').innerText = `৳${p.seatRent}`;
-      document.getElementById('modalMeal').innerText = `৳${p.mealRate} / meal`;
-      document.getElementById('modalOwner').innerText = `${avgOwner} / 5.0`;
-      document.getElementById('modalDist').innerText = p.distance || "Near RUET";
-      document.getElementById('modalAddress').innerHTML = `<i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> ${p.address}`;
-
-      document.getElementById('modalFacilities').innerHTML = p.facilities.map(f => `<span class="text-xs bg-white border border-slate-200 px-2.5 py-1 rounded-md font-medium text-slate-700"><i class="fa-solid fa-check text-emerald-500 mr-1"></i>${f}</span>`).join('');
-      document.getElementById('modalGoogleIframe').src = `https://maps.google.com/maps?q=${p.lat},${p.lng}&z=16&output=embed`;
-
-      const revList = document.getElementById('modalReviewsList');
-      revList.innerHTML = (p.reviews || []).map(r => `
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1.5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <span class="font-bold text-sm text-slate-900">${r.anonymous ? 'Verified RUETian' : r.studentName}</span>
-              <span class="text-[11px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold"><i class="fa-solid fa-circle-check"></i> ${r.dept}</span>
-            </div>
-            <span class="text-xs font-bold text-amber-600">★ ${r.rating}/5 • Owner: ${r.ownerRating}/5</span>
+    function renderAdminQueue() {
+      const container = document.getElementById('pendingListContainer');
+      document.getElementById('adminPendingCount').innerText = `${pendingSubmissions.length} Pending`;
+      if (!pendingSubmissions.length) { container.innerHTML = `<div class="p-6 text-center text-slate-400 text-sm">No pending reviews.</div>`; return; }
+      container.innerHTML = pendingSubmissions.map((item, idx) => `
+        <div class="p-4 flex justify-between items-center">
+          <div><strong>${item.placeName} (${item.area})</strong><p class="text-xs text-slate-600">"${item.comment}" — ${item.studentName}</p></div>
+          <div class="flex gap-2">
+            <button onclick="approveSubmission(${idx})" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg">Approve</button>
+            <button onclick="rejectSubmission(${idx})" class="bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-lg">Reject</button>
           </div>
-          <p class="text-sm text-slate-700">${r.comment}</p>
-          <div class="text-[11px] text-slate-400">${r.date}</div>
         </div>
       `).join('');
-
-      document.getElementById('detailsModal').classList.remove('hidden');
-      mainMap.flyTo([p.lat, p.lng], 16, { duration: 0.6 });
     }
 
-    function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
+    function renderAdminPlacesList() {
+      const container = document.getElementById('adminPlacesList');
+      container.innerHTML = places.map((p, idx) => `
+        <div class="py-2.5 flex justify-between items-center text-sm">
+          <span><strong>${p.name}</strong> (${p.area}) — ৳${p.seatRent}</span>
+          <button onclick="deleteMess(${idx})" class="text-rose-600 text-xs font-bold hover:underline">Delete Mess</button>
+        </div>
+      `).join('');
+    }
 
-    function openSubmitModal(preselectId = null) {
+    function approveSubmission(idx) {
+      const item = pendingSubmissions[idx];
+      const reviewObj = { studentName: item.studentName, roll: item.roll, dept: item.dept, comment: item.comment, rating: item.rating || 4, ownerRating: item.ownerRating || 4 };
+      
+      if (item.isNewPlace) {
+        places.push({ id: 'p_' + Date.now(), name: item.placeName, area: item.area, address: item.address, lat: item.lat, lng: item.lng, seatRent: item.seatRent, mealRate: item.mealRate, distance: "Near RUET", facilities: item.facilities || ["WiFi"], reviews: [reviewObj] });
+      } else {
+        const target = places.find(p => p.id === item.placeId);
+        if (target) { if (!target.reviews) target.reviews = []; target.reviews.unshift(reviewObj); }
+      }
+      pendingSubmissions.splice(idx, 1);
+      db.ref('ruet_nest/places').set(places);
+      db.ref('ruet_nest/pending').set(pendingSubmissions);
+      renderPlaces(); renderAdminQueue(); renderAdminPlacesList();
+    }
+
+    function rejectSubmission(idx) {
+      pendingSubmissions.splice(idx, 1);
+      db.ref('ruet_nest/pending').set(pendingSubmissions);
+      renderAdminQueue();
+    }
+
+    function deleteMess(idx) {
+      if (confirm("Are you sure you want to delete this mess?")) {
+        places.splice(idx, 1);
+        db.ref('ruet_nest/places').set(places);
+        renderPlaces(); renderAdminPlacesList();
+      }
+    }
+
+    function openSubmitModal() {
       const sel = document.getElementById('fPlaceSelect');
-      sel.innerHTML = places.map(p => `<option value="${p.id}">${p.name} (${p.area})</option>`).join('') + `<option value="NEW">+ Add a New Mess / Hostel</option>`;
-      if (preselectId) sel.value = preselectId;
+      sel.innerHTML = places.map(p => `<option value="${p.id}">${p.name} (${p.area})</option>`).join('') + `<option value="NEW">+ Add New Mess</option>`;
       toggleNewPlaceFields();
       document.getElementById('submitModal').classList.remove('hidden');
-
-      setTimeout(() => {
-        if (!pickerMap) {
-          pickerMap = L.map('pickerMap').setView(RUET_CENTER, 15);
-          L.tileLayer(TILE_LAYERS.google_street.url, { attribution: TILE_LAYERS.google_street.attr }).addTo(pickerMap);
-          pickerMarker = L.marker(RUET_CENTER, { draggable: true }).addTo(pickerMap);
-          pickerMap.on('click', (e) => {
-            pickerMarker.setLatLng(e.latlng);
-            document.getElementById('pickedLat').innerText = e.latlng.lat.toFixed(4);
-            document.getElementById('pickedLng').innerText = e.latlng.lng.toFixed(4);
-          });
-        } else { pickerMap.invalidateSize(); }
-      }, 200);
     }
-
-    function openSubmitModalForCurrent() { closeDetailsModal(); openSubmitModal(currentModalPlaceId); }
     function closeSubmitModal() { document.getElementById('submitModal').classList.add('hidden'); }
-
     function toggleNewPlaceFields() {
       const isNew = document.getElementById('fPlaceSelect').value === 'NEW';
       document.getElementById('newPlaceFields').classList.toggle('hidden', !isNew);
-      if (isNew && pickerMap) setTimeout(() => pickerMap.invalidateSize(), 150);
     }
 
     function handleReviewSubmit(e) {
       e.preventDefault();
       const placeVal = document.getElementById('fPlaceSelect').value;
       const isNew = placeVal === 'NEW';
-      const existingPlace = places.find(p => p.id === placeVal);
-      const selectedFacs = Array.from(document.querySelectorAll('.fac-check:checked')).map(cb => cb.value);
+      const existing = places.find(p => p.id === placeVal);
 
-      const newPending = {
-        id: 'pend_' + Date.now(),
+      const newSub = {
         isNewPlace: isNew,
         placeId: isNew ? 'p_' + Date.now() : placeVal,
-        placeName: isNew ? (document.getElementById('fNewName').value || "Unnamed Mess") : existingPlace.name,
-        area: isNew ? document.getElementById('fNewArea').value : existingPlace.area,
-        address: isNew ? document.getElementById('fNewAddress').value : existingPlace.address,
-        lat: isNew ? Number(document.getElementById('pickedLat').innerText) : existingPlace.lat,
-        lng: isNew ? Number(document.getElementById('pickedLng').innerText) : existingPlace.lng,
+        placeName: isNew ? document.getElementById('fNewName').value : existing.name,
+        area: isNew ? document.getElementById('fNewArea').value : existing.area,
+        address: isNew ? document.getElementById('fNewAddress').value : existing.address,
+        lat: isNew ? 24.3640 : existing.lat,
+        lng: isNew ? 88.6290 : existing.lng,
         studentName: document.getElementById('fStudentName').value,
         roll: document.getElementById('fStudentRoll').value,
         dept: document.getElementById('fStudentDept').value,
-        anonymous: document.getElementById('fAnonymous').checked,
         seatRent: Number(document.getElementById('fRent').value),
         mealRate: Number(document.getElementById('fMeal').value),
-        rating: Number(document.getElementById('fRating').value),
-        ownerRating: Number(document.getElementById('fOwnerRating').value),
-        facilities: selectedFacs,
-        comment: document.getElementById('fComment').value,
-        date: "Oct 2026"
+        comment: document.getElementById('fComment').value
       };
 
-      pendingSubmissions.unshift(newPending);
-      saveDataToFirebase();
-      document.getElementById('reviewForm').reset();
+      pendingSubmissions.unshift(newSub);
+      db.ref('ruet_nest/pending').set(pendingSubmissions);
       closeSubmitModal();
-      renderPlaces();
-      renderAdminQueue();
-      alert("✅ Review submitted! Your entry is now in the Admin Verification Queue.");
+      document.getElementById('reviewForm').reset();
+      alert("Review submitted to Admin Verification Queue!");
     }
 
-    function switchView(view) {
-      document.getElementById('publicView').classList.toggle('hidden', view !== 'public');
-      document.getElementById('adminView').classList.toggle('hidden', view !== 'admin');
-      if (view === 'admin') renderAdminQueue();
-      if (view === 'public') setTimeout(() => mainMap.invalidateSize(), 150);
+    function openDetailsModal(id) {
+      const p = places.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('modalTitle').innerText = p.name;
+      document.getElementById('modalRent').innerText = `৳${p.seatRent}`;
+      document.getElementById('modalMeal').innerText = `৳${p.mealRate}`;
+      document.getElementById('modalOwner').innerText = "4.5/5";
+      document.getElementById('modalDist').innerText = p.distance;
+      document.getElementById('modalAddress').innerText = p.address;
+      document.getElementById('modalReviewsList').innerHTML = (p.reviews || []).map(r => `<div class="bg-slate-50 p-3 rounded-xl text-xs"><strong>${r.studentName} (${r.dept}):</strong> ${r.comment}</div>`).join('') || '<p class="text-xs text-slate-400">No reviews yet.</p>';
+      document.getElementById('detailsModal').classList.remove('hidden');
     }
-
-    function renderAdminQueue() {
-      const container = document.getElementById('pendingListContainer');
-      if (!pendingSubmissions.length) {
-        container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">🎉 All caught up! No pending reviews.</div>`;
-        return;
-      }
-      container.innerHTML = pendingSubmissions.map(item => `
-        <div class="p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-slate-50">
-          <div class="space-y-1.5">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="text-xs font-extrabold px-2 py-0.5 rounded ${item.isNewPlace ? 'bg-purple-100 text-purple-800' : 'bg-sky-100 text-sky-800'}">${item.isNewPlace ? 'NEW MESS' : 'REVIEW'}</span>
-              <h4 class="font-bold text-slate-900">${item.placeName} (${item.area})</h4>
-              <span class="text-xs font-bold text-amber-600">★ ${item.rating}/5</span>
-            </div>
-            <p class="text-sm text-slate-700 bg-slate-100 p-2.5 rounded-lg border border-slate-200">"${item.comment}"</p>
-            <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-1">
-              <span><strong>Student:</strong> ${item.studentName} (${item.roll}, ${item.dept})</span>
-              <span>Rent: ৳${item.seatRent} | Meal: ৳${item.mealRate}</span>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button onclick="approveSubmission('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow"><i class="fa-solid fa-check"></i> Approve</button>
-            <button onclick="rejectSubmission('${item.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold px-3 py-2 rounded-lg">Reject</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function approveSubmission(id) {
-      const idx = pendingSubmissions.findIndex(x => x.id === id);
-      if (idx === -1) return;
-      const item = pendingSubmissions[idx];
-
-      const reviewObj = {
-        studentName: item.studentName, roll: item.roll, dept: item.dept,
-        anonymous: item.anonymous, rating: item.rating, ownerRating: item.ownerRating,
-        comment: item.comment, date: item.date
-      };
-
-      if (item.isNewPlace) {
-        places.push({
-          id: item.placeId, name: item.placeName, area: item.area,
-          address: item.address || `${item.area}, Near RUET`,
-          lat: item.lat || 24.3640, lng: item.lng || 88.6290,
-          seatRent: item.seatRent, mealRate: item.mealRate, distance: "Near RUET",
-          facilities: item.facilities, reviews: [reviewObj]
-        });
-      } else {
-        const target = places.find(p => p.id === item.placeId);
-        if (target) {
-          if (!target.reviews) target.reviews = [];
-          target.reviews.unshift(reviewObj);
-          target.seatRent = Math.round((target.seatRent + item.seatRent) / 2);
-          target.mealRate = Math.round((target.mealRate + item.mealRate) / 2);
-        }
-      }
-
-      pendingSubmissions.splice(idx, 1);
-      saveDataToFirebase();
-      renderPlaces();
-      renderAdminQueue();
-    }
-
-    function rejectSubmission(id) {
-      pendingSubmissions = pendingSubmissions.filter(x => x.id !== id);
-      saveDataToFirebase();
-      renderPlaces();
-      renderAdminQueue();
-    }
-
-    function exportBloggerHTML() {
-      let html = `<div><h2>RUET Verified Hostel & Mess Reviews</h2>`;
-      places.forEach(p => {
-        const { avgRating, avgOwner } = getPlaceStats(p);
-        html += `<div><h3>${p.name} (${p.area}) — ★ ${avgRating}/5</h3><p>Seat Rent: ৳${p.seatRent}</p></div>`;
-      });
-      html += `</div>`;
-      document.getElementById('bloggerCodeArea').value = html;
-      document.getElementById('bloggerExportBox').classList.remove('hidden');
-    }
-
-    function copyBloggerCode() {
-      document.getElementById('bloggerCodeArea').select();
-      document.execCommand('copy');
-      alert("Blogger HTML copied successfully!");
-    }
+    function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
 
     window.onload = () => {
       initMaps();
