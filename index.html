@@ -224,7 +224,7 @@
       </div>
       <div class="space-y-3">
         <div class="flex gap-2">
-          <input id="newAdminEmailInput" type="email" placeholder="New Admin Email (e.g. junior@ruet.ac.bd)" class="flex-1 bg-slate-50 border rounded-xl px-3 py-2 text-sm" />
+          <input id="newAdminEmailInput" type="email" placeholder="New Admin Email" class="flex-1 bg-slate-50 border rounded-xl px-3 py-2 text-sm" />
           <button onclick="addNewAdminEmail()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 rounded-xl">Add Admin</button>
         </div>
         <div class="text-xs font-bold text-slate-500 uppercase pt-2">Current Admin List:</div>
@@ -233,7 +233,7 @@
     </div>
   </div>
 
-  <!-- Details Modal & Submit Modal (Same as before) -->
+  <!-- Details Modal -->
   <div id="detailsModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border p-6 space-y-6">
       <div class="flex justify-between items-center border-b pb-3">
@@ -251,6 +251,7 @@
     </div>
   </div>
 
+  <!-- Submit Modal -->
   <div id="submitModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
@@ -305,17 +306,18 @@
     const auth = firebase.auth();
 
     let currentUser = null;
-let allowedAdminEmails = [
-  "ehosanulhaqueshibabnil@gmail.com", 
-  "ehosanul04@gmail.com"
-];
+    let allowedAdminEmails = [
+      "senior@ruet.ac.bd", 
+      "admin@ruet.ac.bd", 
+      "ehosanulhaqueshibabnil@gmail.com", 
+      "ehosanul04@gmail.com"
+    ];
     let places = [];
     let pendingSubmissions = [];
     let RUET_CENTER = [24.3636, 88.6284];
     let mainMap, pickerMap, pickerMarker;
     let mapMarkers = {};
 
-    // Load Data & Admins from Firebase
     function loadDataFromFirebase() {
       db.ref('ruet_nest/admins').on('value', snap => {
         if (snap.val()) allowedAdminEmails = snap.val();
@@ -332,7 +334,6 @@ let allowedAdminEmails = [
       });
     }
 
-    // Firebase Auth State Listener
     auth.onAuthStateChanged(user => {
       currentUser = user;
       if (user && allowedAdminEmails.includes(user.email)) {
@@ -355,7 +356,6 @@ let allowedAdminEmails = [
 
     function closeAdminLoginModal() { document.getElementById('adminLoginModal').classList.add('hidden'); }
 
-    // Secure Login via Firebase Auth
     function handleFirebaseLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
@@ -386,7 +386,6 @@ let allowedAdminEmails = [
       });
     }
 
-    // Manage Admins Modal
     function openManageAdminsModal() {
       const container = document.getElementById('adminListContainer');
       container.innerHTML = allowedAdminEmails.map(email => `<div class="py-1.5 flex justify-between items-center"><span>${email}</span> <button onclick="removeAdminEmail('${email}')" class="text-rose-600 text-xs font-bold">Remove</button></div>`).join('');
@@ -411,11 +410,25 @@ let allowedAdminEmails = [
       openManageAdminsModal();
     }
 
-    // Map & UI Rendering functions
     function initMaps() {
       mainMap = L.map('mainMap').setView(RUET_CENTER, 15);
       L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 20 }).addTo(mainMap);
     }
+
+    function setQuickArea(area) {
+      document.getElementById('areaFilter').value = area;
+      syncAreaPills();
+      renderPlaces();
+    }
+
+    function syncAreaPills() {
+      const current = document.getElementById('areaFilter').value;
+      document.querySelectorAll('.area-pill').forEach(btn => btn.className = "area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0");
+      const activeBtn = document.getElementById('pill-' + current);
+      if (activeBtn) activeBtn.className = "area-pill bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm transition shrink-0";
+    }
+
+    function resetMapView() { mainMap.flyTo(RUET_CENTER, 15, { duration: 0.8 }); }
 
     function renderPlaces() {
       const search = document.getElementById('searchInput').value.toLowerCase();
@@ -526,11 +539,25 @@ let allowedAdminEmails = [
       sel.innerHTML = places.map(p => `<option value="${p.id}">${p.name} (${p.area})</option>`).join('') + `<option value="NEW">+ Add New Mess</option>`;
       toggleNewPlaceFields();
       document.getElementById('submitModal').classList.remove('hidden');
+
+      setTimeout(() => {
+        if (!pickerMap) {
+          pickerMap = L.map('pickerMap').setView(RUET_CENTER, 15);
+          L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}').addTo(pickerMap);
+          pickerMarker = L.marker(RUET_CENTER, { draggable: true }).addTo(pickerMap);
+          pickerMap.on('click', (e) => {
+            pickerMarker.setLatLng(e.latlng);
+            document.getElementById('pickedLat').innerText = e.latlng.lat.toFixed(4);
+            document.getElementById('pickedLng').innerText = e.latlng.lng.toFixed(4);
+          });
+        } else { pickerMap.invalidateSize(); }
+      }, 200);
     }
     function closeSubmitModal() { document.getElementById('submitModal').classList.add('hidden'); }
     function toggleNewPlaceFields() {
       const isNew = document.getElementById('fPlaceSelect').value === 'NEW';
       document.getElementById('newPlaceFields').classList.toggle('hidden', !isNew);
+      if (isNew && pickerMap) setTimeout(() => pickerMap.invalidateSize(), 150);
     }
 
     function handleReviewSubmit(e) {
@@ -545,8 +572,8 @@ let allowedAdminEmails = [
         placeName: isNew ? document.getElementById('fNewName').value : existing.name,
         area: isNew ? document.getElementById('fNewArea').value : existing.area,
         address: isNew ? document.getElementById('fNewAddress').value : existing.address,
-        lat: isNew ? 24.3640 : existing.lat,
-        lng: isNew ? 88.6290 : existing.lng,
+        lat: isNew ? Number(document.getElementById('pickedLat').innerText) : existing.lat,
+        lng: isNew ? Number(document.getElementById('pickedLng').innerText) : existing.lng,
         studentName: document.getElementById('fStudentName').value,
         roll: document.getElementById('fStudentRoll').value,
         dept: document.getElementById('fStudentDept').value,
@@ -569,7 +596,7 @@ let allowedAdminEmails = [
       document.getElementById('modalRent').innerText = `৳${p.seatRent}`;
       document.getElementById('modalMeal').innerText = `৳${p.mealRate}`;
       document.getElementById('modalOwner').innerText = "4.5/5";
-      document.getElementById('modalDist').innerText = p.distance;
+      document.getElementById('modalDist').innerText = p.distance || "Near RUET";
       document.getElementById('modalAddress').innerText = p.address;
       document.getElementById('modalReviewsList').innerHTML = (p.reviews || []).map(r => `<div class="bg-slate-50 p-3 rounded-xl text-xs"><strong>${r.studentName} (${r.dept}):</strong> ${r.comment}</div>`).join('') || '<p class="text-xs text-slate-400">No reviews yet.</p>';
       document.getElementById('detailsModal').classList.remove('hidden');
