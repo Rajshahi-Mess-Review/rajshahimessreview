@@ -64,7 +64,7 @@
   <!-- ==================== PUBLIC VIEW ==================== -->
   <main id="publicView" class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-5">
 
-    <!-- Hero & Dynamic Stats (Removed 100% Roll Verified) -->
+    <!-- Hero & Dynamic Stats -->
     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-6 text-white shadow-xl border border-slate-700/60 flex flex-col lg:flex-row items-center justify-between gap-6">
       <div class="space-y-2.5 max-w-2xl">
         <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 px-3 py-1 rounded-full">
@@ -130,7 +130,7 @@
 
     <!-- Map + Mess List Split Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      <!-- Left: Interactive Map (Google Maps Road / Hybrid / OSM Switcher) -->
+      <!-- Left: Interactive Map -->
       <div class="lg:col-span-7 bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80">
         <div class="flex flex-wrap items-center justify-between px-1 pb-3 gap-2">
           <div class="flex items-center gap-2">
@@ -197,7 +197,6 @@
         </button>
       </form>
 
-      <!-- Quick Demo Credentials Box (Can be moved to config.js later) -->
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
         <div class="text-[11px] font-bold uppercase text-slate-400">Configured Admin Accounts (Click to Auto-Fill):</div>
         <div class="grid grid-cols-2 gap-2">
@@ -340,7 +339,7 @@
     </div>
   </div>
 
-  <!-- ==================== SUBMIT REVIEW / ADD MESS MODAL ==================== -->
+  <!-- ==================== SUBMIT REVIEW MODAL ==================== -->
   <div id="submitModal" class="hidden fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200">
       <div class="sticky top-0 bg-slate-900 text-white px-6 py-4 flex items-center justify-between z-10">
@@ -366,7 +365,7 @@
           </div>
           <label class="flex items-center gap-2 text-xs text-slate-700 cursor-pointer pt-1">
             <input id="fAnonymous" type="checkbox" checked class="rounded text-emerald-600 focus:ring-emerald-500" />
-            <span><strong>Hide my name publicly</strong> (Display as "Verified RUETian" to protect privacy from landlords)</span>
+            <span><strong>Hide my name publicly</strong> (Display as "Verified RUETian" to protect privacy)</span>
           </label>
         </div>
 
@@ -386,7 +385,7 @@
                 <option value="Monafer Mor">Monafer Mor</option>
               </select>
             </div>
-            <input id="fNewAddress" type="text" placeholder="Detailed Address / Landmark (e.g. Behind Kazla Mosque)" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
+            <input id="fNewAddress" type="text" placeholder="Detailed Address / Landmark" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm" />
             <div>
               <label class="block text-xs font-semibold text-slate-600 mb-1">Click on the Map to Pin Exact Mess Location:</label>
               <div id="pickerMap"></div>
@@ -439,7 +438,7 @@
             <label class="flex items-center gap-1.5"><input type="checkbox" class="fac-check" value="No Waterlogging" /> No Waterlogging</label>
           </div>
 
-          <textarea required id="fComment" rows="3" placeholder="Share honest details: How is the house owner? Do they return security deposits fairly? How is the water, food, security, and study environment?" class="w-full border border-slate-300 rounded-lg p-3 text-sm"></textarea>
+          <textarea required id="fComment" rows="3" placeholder="Share honest details about owner, food, security, and environment..." class="w-full border border-slate-300 rounded-lg p-3 text-sm"></textarea>
         </div>
 
         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition">
@@ -449,15 +448,35 @@
     </div>
   </div>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
   <script>
-    // ==================== ADMIN CREDENTIALS (Can be moved to config.js later) ====================
+    // ==================== FIREBASE & CONFIG INIT ====================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrbBZXiRySEfe1c9wXRQbdBP-lqatBGCE",
+      authDomain: "rajshahi-mess-review.firebaseapp.com",
+      databaseURL: "https://rajshahi-mess-review-default-rtdb.firebaseio.com",
+      projectId: "rajshahi-mess-review",
+      storageBucket: "rajshahi-mess-review.appspot.com",
+      messagingSenderId: "39763980001",
+      appId: "1:39763980001:web:676754edb5ae5c324311a0",
+      measurementId: "G-1Z05TZPZVJ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    console.log("Firebase Connected Successfully!");
+
+    // ==================== ADMIN CREDENTIALS ====================
     const ADMIN_ACCOUNTS = [
       { id: "senior@ruet.ac.bd", pass: "ruet2026", name: "Senior Coordinator" },
       { id: "admin@ruet.ac.bd", pass: "nest1234", name: "RUET Moderator" }
     ];
     let loggedInAdmin = null;
 
-    // ==================== INITIAL RUET MESS DATA ====================
+    // ==================== DEFAULT RUET MESS DATA ====================
     const RUET_CENTER = [24.3636, 88.6284];
     let currentModalPlaceId = null;
     let mainTileLayer = null;
@@ -476,8 +495,7 @@
         distance: "5 mins walk",
         facilities: ["Fast WiFi", "24/7 Water & IPS", "Quality Meal System"],
         reviews: [
-          { studentName: "Tanvir Ahmed", roll: "2003018", dept: "CSE '20", anonymous: true, rating: 4.5, ownerRating: 5, comment: "The landlord is very cooperative and never creates unnecessary hassle. The meal system is well-managed and the rooms are spacious with good natural light.", date: "Oct 2026" },
-          { studentName: "Samiul Islam", roll: "2102055", dept: "EEE '21", anonymous: false, rating: 4.0, ownerRating: 4, comment: "Water supply and IPS backup are reliable throughout the summer. Ground floor rooms can get slight street noise during peak hours.", date: "Sep 2026" }
+          { studentName: "Tanvir Ahmed", roll: "2003018", dept: "CSE '20", anonymous: true, rating: 4.5, ownerRating: 5, comment: "The landlord is very cooperative and never creates unnecessary hassle.", date: "Oct 2026" }
         ]
       },
       {
@@ -492,107 +510,58 @@
         distance: "4 mins walk",
         facilities: ["24/7 Water & IPS", "No Waterlogging"],
         reviews: [
-          { studentName: "Rafiul Karim", roll: "2201033", dept: "ME '22", anonymous: true, rating: 2.5, ownerRating: 2, comment: "Very close to the RUET main gate and affordable, but the landlord is overly strict. The main gate locks at 10:30 PM sharp and he deducts money from the advance deposit when leaving.", date: "Oct 2026" }
-        ]
-      },
-      {
-        id: "p3",
-        name: "Barind Scholars Hostel",
-        area: "Vodra",
-        address: "Vodra Mor, Near Railway Crossing, Rajshahi",
-        lat: 24.3705,
-        lng: 88.6260,
-        seatRent: 2800,
-        mealRate: 60,
-        distance: "8 mins auto/walk",
-        facilities: ["Fast WiFi", "24/7 Water & IPS", "Quality Meal System", "Flexible Gate Hours"],
-        reviews: [
-          { studentName: "Nafis Sadik", roll: "1904012", dept: "CE '19", anonymous: false, rating: 5.0, ownerRating: 5, comment: "Excellent study environment. Newly constructed building with tiled rooms, CCTV security, and open rooftop access for residents.", date: "Aug 2026" }
-        ]
-      },
-      {
-        id: "p4",
-        name: "Al-Amin Mess (Binodpur Bazar)",
-        area: "Binodpur",
-        address: "North of Binodpur Bazar, Near RUET East Pocket Gate",
-        lat: 24.3652,
-        lng: 88.6378,
-        seatRent: 1800,
-        mealRate: 48,
-        distance: "6 mins walk",
-        facilities: ["Fast WiFi", "Quality Meal System"],
-        reviews: [
-          { studentName: "Mehedi Hasan", roll: "2103110", dept: "CSE '21", anonymous: true, rating: 3.8, ownerRating: 4, comment: "Great budget option for first-year students. Since Binodpur market is right next door, daily meal costs stay very reasonable.", date: "Sep 2026" }
+          { studentName: "Rafiul Karim", roll: "2201033", dept: "ME '22", anonymous: true, rating: 2.5, ownerRating: 2, comment: "Very close to RUET main gate, affordable rent.", date: "Oct 2026" }
         ]
       }
     ];
 
-    let pendingSubmissions = [
-      {
-        id: "pend1",
-        isNewPlace: false,
-        placeId: "p2",
-        placeName: "Kazla Green Villa (Bashundhara Lane)",
-        area: "Kazla",
-        studentName: "Mahmudul Hasan",
-        roll: "2303089",
-        dept: "CSE '23",
-        anonymous: true,
-        seatRent: 2100,
-        mealRate: 52,
-        rating: 2,
-        ownerRating: 1,
-        facilities: ["No Waterlogging"],
-        comment: "Stayed here during my first semester. The house owner charges an extra 300 BDT every month as hidden maintenance fees. Confirm utility policies in writing before moving in!",
-        date: "Just now"
-      }
-    ];
+    let pendingSubmissions = [];
 
-    // ==================== RELIABLE MAP SERVERS (NO API KEY NEEDED, WORKS ON LOCAL FILE://) ====================
+    // Load data from Firebase on start
+    function loadDataFromFirebase() {
+      db.ref('ruet_nest/places').once('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val) places = val;
+        renderPlaces();
+      });
+      db.ref('ruet_nest/pending').once('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val) pendingSubmissions = val;
+        renderAdminQueue();
+      });
+    }
+
+    function saveDataToFirebase() {
+      db.ref('ruet_nest/places').set(places);
+      db.ref('ruet_nest/pending').set(pendingSubmissions);
+    }
+
+    // ==================== MAP LAYERS ====================
     let mainMap, pickerMap, pickerMarker;
     let mapMarkers = {};
 
     const TILE_LAYERS = {
-      google_street: {
-        url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-        attr: '&copy; Google Maps'
-      },
-      google_sat: {
-        url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
-        attr: '&copy; Google Satellite Hybrid'
-      },
-      esri: {
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-        attr: '&copy; Esri World Street Map'
-      }
+      google_street: { url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', attr: '&copy; Google Maps' },
+      google_sat: { url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', attr: '&copy; Google Satellite' },
+      esri: { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', attr: '&copy; Esri Map' }
     };
 
     function initMaps() {
       mainMap = L.map('mainMap').setView(RUET_CENTER, 15);
-      mainTileLayer = L.tileLayer(TILE_LAYERS.google_street.url, {
-        attribution: TILE_LAYERS.google_street.attr,
-        maxZoom: 20
-      }).addTo(mainMap);
+      mainTileLayer = L.tileLayer(TILE_LAYERS.google_street.url, { maxZoom: 20 }).addTo(mainMap);
 
-      // RUET Campus Landmark Marker
       const ruetIcon = L.divIcon({
         className: '',
         html: `<div class="bg-slate-900 text-white text-[11px] font-extrabold px-3 py-1 rounded-full shadow-lg border-2 border-emerald-400 whitespace-nowrap"><i class="fa-solid fa-graduation-cap text-emerald-400"></i> RUET Main Campus</div>`,
         iconSize: [135, 28]
       });
-      L.marker(RUET_CENTER, { icon: ruetIcon }).addTo(mainMap).bindPopup("<b>Rajshahi University of Engineering & Technology (RUET)</b>");
+      L.marker(RUET_CENTER, { icon: ruetIcon }).addTo(mainMap).bindPopup("<b>RUET Main Campus</b>");
     }
 
     function setMapLayer(key) {
       if (mainTileLayer) mainMap.removeLayer(mainTileLayer);
-      mainTileLayer = L.tileLayer(TILE_LAYERS[key].url, {
-        attribution: TILE_LAYERS[key].attr,
-        maxZoom: 20
-      }).addTo(mainMap);
-
-      document.querySelectorAll('.map-layer-btn').forEach(btn => {
-        btn.className = "map-layer-btn text-slate-600 hover:text-slate-900 text-xs px-2.5 py-1 rounded-lg font-semibold transition";
-      });
+      mainTileLayer = L.tileLayer(TILE_LAYERS[key].url, { maxZoom: 20 }).addTo(mainMap);
+      document.querySelectorAll('.map-layer-btn').forEach(btn => btn.className = "map-layer-btn text-slate-600 hover:text-slate-900 text-xs px-2.5 py-1 rounded-lg font-semibold transition");
       document.getElementById('layer-' + key).className = "map-layer-btn bg-white text-slate-900 shadow-sm text-xs px-2.5 py-1 rounded-lg font-bold transition";
     }
 
@@ -614,7 +583,6 @@
       setTimeout(() => highlightPin(placeId, false), 2500);
     }
 
-    // ==================== QUICK AREA FILTER PILLS ====================
     function setQuickArea(area) {
       document.getElementById('areaFilter').value = area;
       syncAreaPills();
@@ -623,27 +591,18 @@
 
     function syncAreaPills() {
       const current = document.getElementById('areaFilter').value;
-      document.querySelectorAll('.area-pill').forEach(btn => {
-        btn.className = "area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0";
-      });
+      document.querySelectorAll('.area-pill').forEach(btn => btn.className = "area-pill bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200 text-xs font-semibold px-3.5 py-1.5 rounded-full transition shrink-0");
       const activeBtn = document.getElementById('pill-' + current);
-      if (activeBtn) {
-        activeBtn.className = "area-pill bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm transition shrink-0";
-      }
+      if (activeBtn) activeBtn.className = "area-pill bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm transition shrink-0";
     }
 
-    // ==================== HELPER CALCULATIONS ====================
     function getPlaceStats(place) {
-      if (!place.reviews.length) return { avgRating: 0, avgOwner: 0 };
+      if (!place.reviews || !place.reviews.length) return { avgRating: 0, avgOwner: 0 };
       const sumR = place.reviews.reduce((a, r) => a + Number(r.rating), 0);
       const sumO = place.reviews.reduce((a, r) => a + Number(r.ownerRating), 0);
-      return {
-        avgRating: (sumR / place.reviews.length).toFixed(1),
-        avgOwner: (sumO / place.reviews.length).toFixed(1)
-      };
+      return { avgRating: (sumR / place.reviews.length).toFixed(1), avgOwner: (sumO / place.reviews.length).toFixed(1) };
     }
 
-    // ==================== RENDER PUBLIC LIST & MAP PINS ====================
     function renderPlaces() {
       const search = document.getElementById('searchInput').value.toLowerCase();
       const area = document.getElementById('areaFilter').value;
@@ -665,7 +624,6 @@
         return 0;
       });
 
-      // Clear & redraw map markers
       Object.values(mapMarkers).forEach(m => mainMap.removeLayer(m));
       mapMarkers = {};
 
@@ -677,18 +635,14 @@
         const badgeColor = avgRating >= 4 ? 'bg-emerald-500' : (avgRating >= 3 ? 'bg-amber-500' : 'bg-rose-500');
         const isCompared = compareList.includes(p.id);
 
-        // Add Map Marker
         const pinIcon = L.divIcon({
           className: '',
           html: `<div id="pin-${p.id}" class="${badgeColor} text-white text-xs font-extrabold px-2.5 py-1 rounded-full shadow-lg border-2 border-white flex items-center gap-1 cursor-pointer hover:scale-110 transition">★ ${avgRating}</div>`,
           iconSize: [58, 26]
         });
-        const marker = L.marker([p.lat, p.lng], { icon: pinIcon })
-          .addTo(mainMap)
-          .on('click', () => openDetailsModal(p.id));
+        const marker = L.marker([p.lat, p.lng], { icon: pinIcon }).addTo(mainMap).on('click', () => openDetailsModal(p.id));
         mapMarkers[p.id] = marker;
 
-        // Add Interactive Card to Right Column
         const card = document.createElement('div');
         card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-200/90 hover:border-emerald-500 hover:shadow-md transition cursor-pointer group";
         card.onmouseenter = () => highlightPin(p.id, true);
@@ -708,7 +662,7 @@
               <div class="inline-flex items-center gap-1 ${badgeColor} text-white text-xs font-extrabold px-2.5 py-1 rounded-xl shadow-sm">
                 <i class="fa-solid fa-star text-[10px]"></i> ${avgRating}
               </div>
-              <div class="text-[11px] text-slate-400 mt-1">${p.reviews.length} review${p.reviews.length > 1 ? 's' : ''}</div>
+              <div class="text-[11px] text-slate-400 mt-1">${p.reviews ? p.reviews.length : 0} reviews</div>
             </div>
           </div>
           <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
@@ -721,32 +675,27 @@
               <i class="fa-solid fa-location-dot"></i> Locate on Map
             </button>
             <button onclick="toggleCompare(event, '${p.id}')" class="${isCompared ? 'text-indigo-600 font-extrabold' : 'text-slate-500 hover:text-slate-800 font-semibold'} flex items-center gap-1">
-              <i class="fa-solid ${isCompared ? 'fa-square-check' : 'fa-scale-balanced'}"></i> ${isCompared ? 'Added to Compare' : 'Compare'}
+              <i class="fa-solid ${isCompared ? 'fa-square-check' : 'fa-scale-balanced'}"></i> ${isCompared ? 'Added' : 'Compare'}
             </button>
           </div>
         `;
         listContainer.appendChild(card);
       });
 
-      // Update Global Stats
       document.getElementById('statPlaces').innerText = places.length;
-      document.getElementById('statReviews').innerText = places.reduce((acc, p) => acc + p.reviews.length, 0);
+      document.getElementById('statReviews').innerText = places.reduce((acc, p) => acc + (p.reviews ? p.reviews.length : 0), 0);
       const avgRent = places.length ? Math.round(places.reduce((acc, p) => acc + p.seatRent, 0) / places.length) : 0;
       document.getElementById('statAvgRent').innerText = `৳${avgRent}`;
       document.getElementById('pendingBadge').innerText = pendingSubmissions.length;
       document.getElementById('adminPendingCount').innerText = `${pendingSubmissions.length} Pending`;
     }
 
-    // ==================== COMPARE MESSES FEATURE ====================
     function toggleCompare(event, placeId) {
       event.stopPropagation();
       if (compareList.includes(placeId)) {
         compareList = compareList.filter(id => id !== placeId);
       } else {
-        if (compareList.length >= 3) {
-          alert("You can compare up to 3 messes at a time.");
-          return;
-        }
+        if (compareList.length >= 3) { alert("You can compare up to 3 messes."); return; }
         compareList.push(placeId);
       }
       const btn = document.getElementById('compareBtn');
@@ -768,72 +717,33 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
-            <tr>
-              <td class="p-3 font-semibold text-slate-600">Overall Rating</td>
-              ${selected.map(p => `<td class="p-3 font-bold text-amber-600">★ ${getPlaceStats(p).avgRating} / 5.0</td>`).join('')}
-            </tr>
-            <tr>
-              <td class="p-3 font-semibold text-slate-600">Seat Rent / Month</td>
-              ${selected.map(p => `<td class="p-3 font-extrabold text-slate-900">৳${p.seatRent}</td>`).join('')}
-            </tr>
-            <tr>
-              <td class="p-3 font-semibold text-slate-600">Meal Rate</td>
-              ${selected.map(p => `<td class="p-3 font-bold text-slate-800">৳${p.mealRate} / meal</td>`).join('')}
-            </tr>
-            <tr>
-              <td class="p-3 font-semibold text-slate-600">Owner Behavior</td>
-              ${selected.map(p => `<td class="p-3 font-bold text-emerald-600">${getPlaceStats(p).avgOwner} / 5.0</td>`).join('')}
-            </tr>
-            <tr>
-              <td class="p-3 font-semibold text-slate-600">Distance to RUET</td>
-              ${selected.map(p => `<td class="p-3 text-slate-700">${p.distance}</td>`).join('')}
-            </tr>
-            <tr>
-              <td class="p-3 font-semibold text-slate-600">Facilities</td>
-              ${selected.map(p => `<td class="p-3 text-xs text-slate-600">${p.facilities.join(', ')}</td>`).join('')}
-            </tr>
+            <tr><td class="p-3 font-semibold text-slate-600">Overall Rating</td>${selected.map(p => `<td class="p-3 font-bold text-amber-600">★ ${getPlaceStats(p).avgRating} / 5.0</td>`).join('')}</tr>
+            <tr><td class="p-3 font-semibold text-slate-600">Seat Rent</td>${selected.map(p => `<td class="p-3 font-extrabold text-slate-900">৳${p.seatRent}</td>`).join('')}</tr>
+            <tr><td class="p-3 font-semibold text-slate-600">Meal Rate</td>${selected.map(p => `<td class="p-3 font-bold text-slate-800">৳${p.mealRate}</td>`).join('')}</tr>
+            <tr><td class="p-3 font-semibold text-slate-600">Owner Behavior</td>${selected.map(p => `<td class="p-3 font-bold text-emerald-600">${getPlaceStats(p).avgOwner} / 5.0</td>`).join('')}</tr>
+            <tr><td class="p-3 font-semibold text-slate-600">Distance</td>${selected.map(p => `<td class="p-3 text-slate-700">${p.distance}</td>`).join('')}</tr>
+            <tr><td class="p-3 font-semibold text-slate-600">Facilities</td>${selected.map(p => `<td class="p-3 text-xs text-slate-600">${p.facilities.join(', ')}</td>`).join('')}</tr>
           </tbody>
         </table>
       `;
       document.getElementById('compareModal').classList.remove('hidden');
     }
 
-    function closeCompareModal() {
-      document.getElementById('compareModal').classList.add('hidden');
-    }
+    function closeCompareModal() { document.getElementById('compareModal').classList.add('hidden'); }
+    function clearCompare() { compareList = []; document.getElementById('compareBtn').classList.add('hidden'); closeCompareModal(); renderPlaces(); }
 
-    function clearCompare() {
-      compareList = [];
-      document.getElementById('compareBtn').classList.add('hidden');
-      closeCompareModal();
-      renderPlaces();
-    }
-
-    // ==================== ADMIN AUTHENTICATION ====================
     function handleAdminClick() {
-      if (loggedInAdmin) {
-        switchView('admin');
-      } else {
-        document.getElementById('loginError').classList.add('hidden');
-        document.getElementById('adminLoginModal').classList.remove('hidden');
-      }
+      if (loggedInAdmin) { switchView('admin'); } 
+      else { document.getElementById('loginError').classList.add('hidden'); document.getElementById('adminLoginModal').classList.remove('hidden'); }
     }
-
-    function closeAdminLoginModal() {
-      document.getElementById('adminLoginModal').classList.add('hidden');
-    }
-
-    function fillCredentials(id, pass) {
-      document.getElementById('loginId').value = id;
-      document.getElementById('loginPass').value = pass;
-    }
+    function closeAdminLoginModal() { document.getElementById('adminLoginModal').classList.add('hidden'); }
+    function fillCredentials(id, pass) { document.getElementById('loginId').value = id; document.getElementById('loginPass').value = pass; }
 
     function handleAdminLogin(e) {
       e.preventDefault();
       const id = document.getElementById('loginId').value.trim();
       const pass = document.getElementById('loginPass').value.trim();
       const matched = ADMIN_ACCOUNTS.find(a => a.id.toLowerCase() === id.toLowerCase() && a.pass === pass);
-
       if (matched) {
         loggedInAdmin = matched;
         document.getElementById('activeAdminName').innerText = matched.name + ` (${matched.id})`;
@@ -841,9 +751,7 @@
         document.getElementById('adminLockIcon').className = "fa-solid fa-user-check text-emerald-400";
         closeAdminLoginModal();
         switchView('admin');
-      } else {
-        document.getElementById('loginError').classList.remove('hidden');
-      }
+      } else { document.getElementById('loginError').classList.remove('hidden'); }
     }
 
     function logoutAdmin() {
@@ -853,7 +761,6 @@
       switchView('public');
     }
 
-    // ==================== DETAILS MODAL + GOOGLE EMBED ====================
     function openDetailsModal(placeId) {
       const p = places.find(x => x.id === placeId);
       if (!p) return;
@@ -868,13 +775,11 @@
       document.getElementById('modalDist').innerText = p.distance || "Near RUET";
       document.getElementById('modalAddress').innerHTML = `<i class="fa-solid fa-location-dot text-emerald-600 mr-1"></i> ${p.address}`;
 
-      const facContainer = document.getElementById('modalFacilities');
-      facContainer.innerHTML = p.facilities.map(f => `<span class="text-xs bg-white border border-slate-200 px-2.5 py-1 rounded-md font-medium text-slate-700"><i class="fa-solid fa-check text-emerald-500 mr-1"></i>${f}</span>`).join('');
-
+      document.getElementById('modalFacilities').innerHTML = p.facilities.map(f => `<span class="text-xs bg-white border border-slate-200 px-2.5 py-1 rounded-md font-medium text-slate-700"><i class="fa-solid fa-check text-emerald-500 mr-1"></i>${f}</span>`).join('');
       document.getElementById('modalGoogleIframe').src = `https://maps.google.com/maps?q=${p.lat},${p.lng}&z=16&output=embed`;
 
       const revList = document.getElementById('modalReviewsList');
-      revList.innerHTML = p.reviews.map(r => `
+      revList.innerHTML = (p.reviews || []).map(r => `
         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1.5">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -892,14 +797,11 @@
       mainMap.flyTo([p.lat, p.lng], 16, { duration: 0.6 });
     }
 
-    function closeDetailsModal() {
-      document.getElementById('detailsModal').classList.add('hidden');
-    }
+    function closeDetailsModal() { document.getElementById('detailsModal').classList.add('hidden'); }
 
-    // ==================== SUBMIT REVIEW MODAL & PICKER MAP ====================
     function openSubmitModal(preselectId = null) {
       const sel = document.getElementById('fPlaceSelect');
-      sel.innerHTML = places.map(p => `<option value="${p.id}">${p.name} (${p.area})</option>`).join('') + `<option value="NEW">+ Add a New Mess / Hostel not in list</option>`;
+      sel.innerHTML = places.map(p => `<option value="${p.id}">${p.name} (${p.area})</option>`).join('') + `<option value="NEW">+ Add a New Mess / Hostel</option>`;
       if (preselectId) sel.value = preselectId;
       toggleNewPlaceFields();
       document.getElementById('submitModal').classList.remove('hidden');
@@ -907,29 +809,19 @@
       setTimeout(() => {
         if (!pickerMap) {
           pickerMap = L.map('pickerMap').setView(RUET_CENTER, 15);
-          L.tileLayer(TILE_LAYERS.google_street.url, {
-            attribution: TILE_LAYERS.google_street.attr
-          }).addTo(pickerMap);
+          L.tileLayer(TILE_LAYERS.google_street.url, { attribution: TILE_LAYERS.google_street.attr }).addTo(pickerMap);
           pickerMarker = L.marker(RUET_CENTER, { draggable: true }).addTo(pickerMap);
           pickerMap.on('click', (e) => {
             pickerMarker.setLatLng(e.latlng);
             document.getElementById('pickedLat').innerText = e.latlng.lat.toFixed(4);
             document.getElementById('pickedLng').innerText = e.latlng.lng.toFixed(4);
           });
-        } else {
-          pickerMap.invalidateSize();
-        }
+        } else { pickerMap.invalidateSize(); }
       }, 200);
     }
 
-    function openSubmitModalForCurrent() {
-      closeDetailsModal();
-      openSubmitModal(currentModalPlaceId);
-    }
-
-    function closeSubmitModal() {
-      document.getElementById('submitModal').classList.add('hidden');
-    }
+    function openSubmitModalForCurrent() { closeDetailsModal(); openSubmitModal(currentModalPlaceId); }
+    function closeSubmitModal() { document.getElementById('submitModal').classList.add('hidden'); }
 
     function toggleNewPlaceFields() {
       const isNew = document.getElementById('fPlaceSelect').value === 'NEW';
@@ -967,6 +859,7 @@
       };
 
       pendingSubmissions.unshift(newPending);
+      saveDataToFirebase();
       document.getElementById('reviewForm').reset();
       closeSubmitModal();
       renderPlaces();
@@ -974,7 +867,6 @@
       alert("✅ Review submitted! Your entry is now in the Admin Verification Queue.");
     }
 
-    // ==================== ADMIN PANEL FUNCTIONS ====================
     function switchView(view) {
       document.getElementById('publicView').classList.toggle('hidden', view !== 'public');
       document.getElementById('adminView').classList.toggle('hidden', view !== 'admin');
@@ -985,35 +877,26 @@
     function renderAdminQueue() {
       const container = document.getElementById('pendingListContainer');
       if (!pendingSubmissions.length) {
-        container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">🎉 All caught up! No pending reviews to verify.</div>`;
+        container.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">🎉 All caught up! No pending reviews.</div>`;
         return;
       }
-
       container.innerHTML = pendingSubmissions.map(item => `
         <div class="p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:bg-slate-50">
           <div class="space-y-1.5">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="text-xs font-extrabold px-2 py-0.5 rounded ${item.isNewPlace ? 'bg-purple-100 text-purple-800' : 'bg-sky-100 text-sky-800'}">
-                ${item.isNewPlace ? 'NEW MESS + REVIEW' : 'EXISTING MESS REVIEW'}
-              </span>
+              <span class="text-xs font-extrabold px-2 py-0.5 rounded ${item.isNewPlace ? 'bg-purple-100 text-purple-800' : 'bg-sky-100 text-sky-800'}">${item.isNewPlace ? 'NEW MESS' : 'REVIEW'}</span>
               <h4 class="font-bold text-slate-900">${item.placeName} (${item.area})</h4>
-              <span class="text-xs font-bold text-amber-600">★ ${item.rating}/5 • Owner: ${item.ownerRating}/5</span>
+              <span class="text-xs font-bold text-amber-600">★ ${item.rating}/5</span>
             </div>
             <p class="text-sm text-slate-700 bg-slate-100 p-2.5 rounded-lg border border-slate-200">"${item.comment}"</p>
             <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-1">
-              <span><strong class="text-slate-700">Student:</strong> ${item.studentName}</span>
-              <span class="bg-emerald-100 text-emerald-900 font-bold px-2 py-0.5 rounded">RUET Roll: ${item.roll} (${item.dept})</span>
-              <span>Public Display: <strong>${item.anonymous ? 'Anonymous' : 'Public Name'}</strong></span>
+              <span><strong>Student:</strong> ${item.studentName} (${item.roll}, ${item.dept})</span>
               <span>Rent: ৳${item.seatRent} | Meal: ৳${item.mealRate}</span>
             </div>
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <button onclick="approveSubmission('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow flex items-center gap-1.5">
-              <i class="fa-solid fa-check"></i> Verify & Approve
-            </button>
-            <button onclick="rejectSubmission('${item.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold px-3 py-2 rounded-lg">
-              Reject
-            </button>
+            <button onclick="approveSubmission('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow"><i class="fa-solid fa-check"></i> Approve</button>
+            <button onclick="rejectSubmission('${item.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold px-3 py-2 rounded-lg">Reject</button>
           </div>
         </div>
       `).join('');
@@ -1025,33 +908,23 @@
       const item = pendingSubmissions[idx];
 
       const reviewObj = {
-        studentName: item.studentName,
-        roll: item.roll,
-        dept: item.dept,
-        anonymous: item.anonymous,
-        rating: item.rating,
-        ownerRating: item.ownerRating,
-        comment: item.comment,
-        date: item.date
+        studentName: item.studentName, roll: item.roll, dept: item.dept,
+        anonymous: item.anonymous, rating: item.rating, ownerRating: item.ownerRating,
+        comment: item.comment, date: item.date
       };
 
       if (item.isNewPlace) {
         places.push({
-          id: item.placeId,
-          name: item.placeName,
-          area: item.area,
+          id: item.placeId, name: item.placeName, area: item.area,
           address: item.address || `${item.area}, Near RUET`,
-          lat: item.lat || 24.3640,
-          lng: item.lng || 88.6290,
-          seatRent: item.seatRent,
-          mealRate: item.mealRate,
-          distance: "Near RUET",
-          facilities: item.facilities,
-          reviews: [reviewObj]
+          lat: item.lat || 24.3640, lng: item.lng || 88.6290,
+          seatRent: item.seatRent, mealRate: item.mealRate, distance: "Near RUET",
+          facilities: item.facilities, reviews: [reviewObj]
         });
       } else {
         const target = places.find(p => p.id === item.placeId);
         if (target) {
+          if (!target.reviews) target.reviews = [];
           target.reviews.unshift(reviewObj);
           target.seatRent = Math.round((target.seatRent + item.seatRent) / 2);
           target.mealRate = Math.round((target.mealRate + item.mealRate) / 2);
@@ -1059,55 +932,23 @@
       }
 
       pendingSubmissions.splice(idx, 1);
+      saveDataToFirebase();
       renderPlaces();
       renderAdminQueue();
     }
 
     function rejectSubmission(id) {
       pendingSubmissions = pendingSubmissions.filter(x => x.id !== id);
+      saveDataToFirebase();
       renderPlaces();
       renderAdminQueue();
-    }
-
-    function simulateGoogleFormImport() {
-      pendingSubmissions.unshift({
-        id: 'pend_gform_' + Date.now(),
-        isNewPlace: true,
-        placeId: 'p_gform_' + Date.now(),
-        placeName: "Swapnonir Student Palace (From Google Form)",
-        area: "Padma Residential",
-        address: "Road 2, Padma Residential Area, Rajshahi",
-        lat: 24.3682,
-        lng: 88.6195,
-        studentName: "Farhan Labib",
-        roll: "2204071",
-        dept: "ECE '22",
-        anonymous: true,
-        seatRent: 3000,
-        mealRate: 65,
-        rating: 4.5,
-        ownerRating: 5,
-        facilities: ["Fast WiFi", "24/7 Water & IPS", "No Waterlogging"],
-        comment: "Imported via Google Form response sheet: Very quiet and secure neighborhood with a dedicated night guard.",
-        date: "Oct 2026"
-      });
-      renderPlaces();
-      renderAdminQueue();
-      alert("📥 1 new response imported from Google Form CSV into the Pending Verification Queue!");
     }
 
     function exportBloggerHTML() {
-      let html = `<!-- RUET Hostel & Mess Verified Directory (Blogger Static Backup) -->\n<div style="font-family:sans-serif;max-width:800px;margin:auto;">\n<h2>RUET Verified Hostel & Mess Reviews</h2>\n`;
+      let html = `<div><h2>RUET Verified Hostel & Mess Reviews</h2>`;
       places.forEach(p => {
         const { avgRating, avgOwner } = getPlaceStats(p);
-        html += `<div style="border:1px solid #ddd;padding:16px;border-radius:10px;margin-bottom:16px;">\n`;
-        html += `  <h3>${p.name} (${p.area}) — ★ ${avgRating}/5</h3>\n`;
-        html += `  <p><strong>Address:</strong> ${p.address} | <strong>Seat Rent:</strong> ৳${p.seatRent} | <strong>Meal Rate:</strong> ৳${p.mealRate} | <strong>Owner Rating:</strong> ${avgOwner}/5</p>\n`;
-        html += `  <ul>\n`;
-        p.reviews.forEach(r => {
-          html += `    <li>"${r.comment}" — <em>${r.anonymous ? 'Verified RUETian' : r.studentName} (${r.dept})</em></li>\n`;
-        });
-        html += `  </ul>\n</div>\n`;
+        html += `<div><h3>${p.name} (${p.area}) — ★ ${avgRating}/5</h3><p>Seat Rent: ৳${p.seatRent}</p></div>`;
       });
       html += `</div>`;
       document.getElementById('bloggerCodeArea').value = html;
@@ -1115,15 +956,14 @@
     }
 
     function copyBloggerCode() {
-      const area = document.getElementById('bloggerCodeArea');
-      area.select();
+      document.getElementById('bloggerCodeArea').select();
       document.execCommand('copy');
-      alert("Blogger Static HTML copied! You can now paste this directly into a Blogger page or post for SEO backup.");
+      alert("Blogger HTML copied successfully!");
     }
 
     window.onload = () => {
       initMaps();
-      renderPlaces();
+      loadDataFromFirebase();
     };
   </script>
 </body>
